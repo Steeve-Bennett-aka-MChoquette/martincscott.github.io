@@ -5,8 +5,6 @@ import Navbar from "@components/navbar/navbar.astro";
 import "@fontsource-variable/inter/index.css";
 import '@fontsource-variable/bricolage-grotesque';
 
-
-
 export interface Props {
   title: string;
 }
@@ -57,14 +55,39 @@ const makeTitle = title
     />
   </head>
   <body>
-    <Navbar />
-    <slot />
-    <Footer />
+    <div class="noise-container">
+      <div class="noise"></div>
+      <Navbar />
+      <slot />
+      <Footer />
+    </div>
     <style is:global>
       /* Improve Page speed */
       /* https://css-tricks.com/almanac/properties/c/content-visibility/ */
       img {
         content-visibility: auto;
+      }
+
+      /* Noise effect styles */
+      .noise-container {
+        position: relative;
+        isolation: isolate;
+        min-height: 100vh;
+      }
+
+      .noise {
+        z-index: -20;
+        position: absolute;
+        inset: 0;
+        background-image: url(/src/assets/noise.webp);
+        opacity: 0.4;
+        mix-blend-mode: overlay;
+        pointer-events: none;        
+      }
+
+      .noise-underlay {
+        z-index: -30;
+        position: relative;        
       }
     </style>
   </body>
