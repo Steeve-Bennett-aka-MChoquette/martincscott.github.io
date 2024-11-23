@@ -190,17 +190,17 @@ Please enter your message.
  })();
 })();</script> <!-- Turnstile --> <script>(function(){const turnstileKey = "0x4AAAAAAA0t8U-8Ka6Vx9nN\n\n";
 
- window.onloadTurnstileCallback = function () {
-   if (typeof window.turnstile !== 'undefined') {
-     window.turnstile.render('#cf-turnstile', {
-       sitekey: turnstileKey,
-       callback: function(token) {
-         console.log(`Challenge Success ${token}`);
-         window.turnstileToken = token;
-       },
-     });
-   }
- };
+  if (typeof window !== 'undefined') {
+    window.onloadTurnstileCallback = function () {
+      turnstile.render('#cf-turnstile', {
+        sitekey: turnstileKey,
+        callback: function(token) {
+          console.log('Turnstile success:', token);
+          window.turnstileToken = token;
+        }
+      });
+    };
+  }
 })();</script> <script async src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback">
 </script> <script>(function(){const emailJsKey = "O5VZre8a_fKOD94Mq";
 const emailJsServiceId = "service_rnchyi9";
