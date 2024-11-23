@@ -1,0 +1,97 @@
+---
+import { Picture } from "astro:assets";
+import profileImage from "@/assets/placeholder.webp";
+import Layout from "@layouts/MainLayout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+
+// Define your skills/technologies
+const skills = [
+  {
+    name: "Web Development",
+    description: "Full-stack development with modern frameworks and tools",
+    icon: "💻"
+  },
+  {
+    name: "Technical Writing",
+    description: "Creating clear, concise technical documentation and articles",
+    icon: "✍️"
+  },
+  {
+    name: "Open Source",
+    description: "Contributing to and maintaining open source projects",
+    icon: "🌐"
+  }
+];
+
+---
+
+<Layout title="About - Martin Scott">
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">About Me</Fragment>
+      <Fragment slot="desc">Software Developer & Technical Writer</Fragment>
+    </Sectionhead>
+
+    <div class="flex flex-col md:flex-row gap-10 mx-auto max-w-4xl mt-16">
+      <div class="flex-1">
+        <div class="w-full max-w-md">
+          <Picture
+            src={profileImage}
+            alt="Martin Scott"
+            sizes="(max-width: 800px) 100vw, 400px"
+            width={600}
+            height={800}
+            class="w-full rounded-md transition shadow-lg bg-white object-cover object-center"
+          />
+        </div>
+      </div>
+      
+      <div class="flex-1 flex flex-col items-center justify-center">
+        <h2 class="font-bold text-3xl text-gray-800">
+          Hi, I'm Martin
+        </h2>
+        <p class="text-lg leading-relaxed text-slate-500 mt-3">
+          I'm a software developer passionate about creating efficient, user-friendly 
+          solutions and sharing knowledge through writing and open source contributions.
+        </p>
+        <p class="text-lg leading-relaxed text-slate-500 mt-3">
+          With experience in full-stack development, I focus on building scalable 
+          applications and contributing to the developer community.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12">
+      {skills.map((skill) => (
+        <div class="group p-5 rounded-lg border border-gray-200 transition hover:shadow-lg">
+          <div class="text-4xl mb-4">{skill.icon}</div>
+          <h3 class="text-lg font-medium text-gray-800">
+            {skill.name}
+          </h3>
+          <p class="text-slate-500 mt-2">
+            {skill.description}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mx-auto max-w-4xl mt-16 text-center">
+      <h2 class="font-bold text-3xl text-gray-800 mb-8">
+        Want to work together?
+      </h2>
+      <div class="flex gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+          Get in Touch
+        </a>
+        <a
+          href="/projects"
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-gray-800 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+          View Projects
+        </a>
+      </div>
+    </div>
+  </Container>
+</Layout>
