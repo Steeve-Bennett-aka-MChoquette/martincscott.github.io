@@ -84,34 +84,86 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
 
 <!-- Initialize EmailJS -->
 <script is:inline define:vars={{ emailJsKey }}>
-    (function() {
-      emailjs.init(emailJsKey);
-    })();
-  </script>
-  
-  <!-- Turnstile -->
-  <script is:inline define:vars={{ turnstileKey }}>
-    window.turnstileToken = null;
-    window.onloadTurnstileCallback = function () {
-      if (typeof window.turnstile !== 'undefined') {
-        window.turnstile.render('#cf-turnstile', {
-          sitekey: turnstileKey,
-          callback: function(token) {
-            console.log(`Challenge Success ${token}`);
-            window.turnstileToken = token;
-          },
-        });
-      }
-    };
-  </script>
-  
-  <!-- Form handling script -->
-  <script is:inline define:vars={{ emailJsKey, emailJsServiceId, emailJsTemplateId }}>
-    // Your existing script but replace the hardcoded values
-    const response = await emailjs.send(
-      emailJsServiceId,
-      emailJsTemplateId,
-      templateParams,
-      emailJsKey
-    );
-  </script>
+ (function() {
+   emailjs.init(emailJsKey);
+ })();
+</script>
+
+<!-- Turnstile -->
+<script is:inline define:vars={{ turnstileKey }}>
+ window.onloadTurnstileCallback = function () {
+   if (typeof window.turnstile !== 'undefined') {
+     window.turnstile.render('#cf-turnstile', {
+       sitekey: turnstileKey,
+       callback: function(token) {
+         console.log(`Challenge Success ${token}`);
+         window.turnstileToken = token;
+       },
+     });
+   }
+ };
+</script>
+
+<script async
+ src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback">
+</script>
+
+<script is:inline define:vars={{ emailJsKey, emailJsServiceId, emailJsTemplateId }}>
+ let form = document.getElementById("form");
+ let result = document.getElementById("result");
+
+ form.addEventListener("submit", async function (e) {
+   e.preventDefault();
+   form.classList.add("was-validated");
+
+   if (!form.checkValidity()) {
+     form.querySelectorAll(":invalid")[0].focus();
+     return;
+   }
+
+   if (!window.turnstileToken) {
+     result.classList.add("text-red-500");
+     result.innerHTML = "Please complete the captcha";
+     return;
+   }
+
+   try {
+     result.innerHTML = "Sending...";
+
+     const templateParams = {
+       from_name: form.from_name.value,
+       reply_to: form.reply_to.value,
+       message: form.message.value,
+       'cf-turnstile-response': window.turnstileToken
+     };
+
+     const response = await emailjs.send(
+       emailJsServiceId,
+       emailJsTemplateId,
+       templateParams,
+       emailJsKey
+     );
+
+     console.log('SUCCESS!', response.status, response.text);
+     result.classList.remove("text-red-500");
+     result.classList.add("text-green-500");
+     result.innerHTML = "Message sent successfully!";
+     
+     // Reset form and captcha
+     form.reset();
+     form.classList.remove("was-validated");
+     turnstile.reset();
+     window.turnstileToken = null;
+
+     // Clear success message after 5 seconds
+     setTimeout(() => {
+       result.style.display = "none";
+     }, 5000);
+
+   } catch(error) {
+     console.log('FAILED...', error);
+     result.classList.add("text-red-500");
+     result.innerHTML = "Failed to send: " + error.text;
+   }
+ });
+</script>
