@@ -183,12 +183,12 @@ Please provide your email address.
 Please provide a valid email address.
 </div> </div> <div class="mb-3" data-astro-cid-uwnxe3i2> <textarea name="message" required placeholder="Your Message" class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none h-36 focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" data-astro-cid-uwnxe3i2></textarea> <div class="empty-feedback invalid-feedback text-red-400 text-sm mt-1" data-astro-cid-uwnxe3i2>
 Please enter your message.
-</div> </div> <!-- Turnstile Widget --> <div class="mb-5" data-astro-cid-uwnxe3i2> <div id="cf-turnstile" class="mb-3" data-astro-cid-uwnxe3i2></div> </div> <button type="submit" data-astro-cid-uwnxe3i2 class="rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 w-full px-6 py-3 bg-black text-white hover:bg-slate-900  border-2 border-transparent">Send Message </button> <div id="result" class="mt-3 text-center" data-astro-cid-uwnxe3i2></div> </form>  <!-- EmailJS SDK --> <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script> <!-- Initialize EmailJS --> <script>(function(){const emailJsKey = undefined;
+</div> </div> <!-- Turnstile Widget --> <div class="mb-5" data-astro-cid-uwnxe3i2> <div id="cf-turnstile" class="mb-3" data-astro-cid-uwnxe3i2></div> </div> <button type="submit" data-astro-cid-uwnxe3i2 class="rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 w-full px-6 py-3 bg-black text-white hover:bg-slate-900  border-2 border-transparent">Send Message </button> <div id="result" class="mt-3 text-center" data-astro-cid-uwnxe3i2></div> </form>  <!-- EmailJS SDK --> <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script> <!-- Initialize EmailJS --> <script>(function(){const emailJsKey = "O5VZre8a_fKOD94Mq";
 
     (function() {
       emailjs.init(emailJsKey);
     })();
-  })();</script> <!-- Turnstile --> <script>(function(){const turnstileKey = undefined;
+  })();</script> <!-- Turnstile --> <script>(function(){const turnstileKey = "0x4AAAAAAA0t8U-8Ka6Vx9nN";
 
     window.turnstileToken = null;
     window.onloadTurnstileCallback = function () {
@@ -202,9 +202,9 @@ Please enter your message.
         });
       }
     };
-  })();</script> <!-- Form handling script --> <script>(function(){const emailJsKey = undefined;
-const emailJsServiceId = undefined;
-const emailJsTemplateId = undefined;
+  })();</script> <!-- Form handling script --> <script>(function(){const emailJsKey = "O5VZre8a_fKOD94Mq";
+const emailJsServiceId = "service_rnchyi9";
+const emailJsTemplateId = "template_6ybbrla";
 
     // Your existing script but replace the hardcoded values
     const response = await emailjs.send(
