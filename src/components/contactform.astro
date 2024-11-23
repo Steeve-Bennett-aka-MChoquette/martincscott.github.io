@@ -1,4 +1,7 @@
 ---
+// At the top of your component
+console.log('Turnstile Key:', import.meta.env.PUBLIC_TURNSTILE_KEY);
+---
 import Button from "./ui/button.astro";
 
 // Get environment variables in the component script
@@ -90,22 +93,22 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
 </script>
 
 <!-- Turnstile -->
-<script is:inline define:vars={{ turnstileKey }}>
- window.onloadTurnstileCallback = function () {
-   if (typeof window.turnstile !== 'undefined') {
-     window.turnstile.render('#cf-turnstile', {
-       sitekey: turnstileKey,
-       callback: function(token) {
-         console.log(`Challenge Success ${token}`);
-         window.turnstileToken = token;
-       },
-     });
-   }
- };
+<script define:vars={{ turnstileKey }}>
+  if (typeof window !== 'undefined') {
+    window.onloadTurnstileCallback = function () {
+      turnstile.render('#cf-turnstile', {
+        sitekey: turnstileKey,
+        callback: function(token) {
+          console.log('Turnstile success:', token);
+          window.turnstileToken = token;
+        }
+      });
+    };
+  }
 </script>
 
 <script async
- src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback">
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback">
 </script>
 
 <script is:inline define:vars={{ emailJsKey, emailJsServiceId, emailJsTemplateId }}>
