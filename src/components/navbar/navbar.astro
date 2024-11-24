@@ -2,7 +2,6 @@
 import Container from "@components/container.astro";
 import Link from "@components/ui/link.astro";
 import Dropdown from "./dropdown.astro";
-import ThemeIcon from "./ThemeIcon.astro";
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 
 const menuitems = [
@@ -37,61 +36,68 @@ const menuitems = [
 ---
 
 <Container>
-  <header class="flex flex-col lg:flex-row justify-between items-center my-5">
+  <header class="py-5">
     <Astronav>
-      <div class="flex w-full lg:w-auto items-center justify-between">
-        <a href="/" class="text-lg"
-          ><span class="font-bold text-slate-800">Astro</span><span
-            class="text-slate-500">ship</span
-          >
+      <div class="flex items-center justify-between">
+        <a href="/" class="text-lg flex-shrink-0">
+          <span class="font-bold text-slate-800 dark:text-pink-500">Martin</span><span
+            class="text-slate-500">CScott</span>
         </a>
-        <div class="block lg:hidden">
-          <MenuIcon class="w-4 h-4 text-gray-800" />
-        </div>
-      </div>
-      <MenuItems class="hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0">
-        <ul class="flex flex-col lg:flex-row lg:gap-3">
-          {
-            menuitems.map((item, index) => (
-              <>
-                {item.children && (
-                  <Dropdown
-                    title={item.title}
-                    children={item.children}
-                    lastItem={index === menuitems.length - 1}
-                  />
-                )}
-                {!item.children && (
-                  <li>
-                    <a href={item.path}>
-                      <div class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
+
+        <MenuItems class="hidden lg:flex flex-1 justify-center">
+          <ul class="flex items-center gap-6">
+            {
+              menuitems.map((item, index) => (
+                <>
+                  {item.children && (
+                    <Dropdown
+                      title={item.title}
+                      children={item.children}
+                      lastItem={index === menuitems.length - 1}
+                    />
+                  )}
+                  {!item.children && (
+                    <li>
+                      <a href={item.path} class="flex items-center text-gray-600 hover:text-gray-900">
                         <span>{item.title}</span>
                         {item.badge && (
                           <span class="ml-1 px-2 py-0.5 text-[10px] animate-pulse font-semibold uppercase text-white bg-indigo-600 rounded-full">
                             New
                           </span>
                         )}
-                      </div>
-                    </a>
-                  </li>
-                )}
-              </>
-            ))
-          }
-        </ul>
-        <div class="lg:hidden flex items-center mt-3 gap-4">
-          <ThemeIcon />
-          <Link href="#" style="muted" block size="md">Log in</Link>
-          <Link href="#" size="md" block>Sign up</Link>
+                      </a>
+                    </li>
+                  )}
+                </>
+              ))
+            }
+          </ul>
+        </MenuItems>
+
+        <div class="flex items-center gap-4">
+          <button 
+            data-switch-theme 
+            class="outline-none flex relative text-heading-2 rounded-full p-2 border border-box-border"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark:hidden">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark:flex hidden">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+            </svg>
+            <span class="sr-only">switch theme</span>
+          </button>
+
+          <div class="hidden lg:flex items-center gap-4">
+            <a href="#" class="text-gray-600 hover:text-gray-900">Log in</a>
+            <Link href="#" size="md">Sign up</Link>
+          </div>
+
+          <div class="block lg:hidden">
+            <MenuIcon class="w-4 h-4 text-gray-800" />
+          </div>
         </div>
-      </MenuItems>
-    </Astronav>
-    <div>
-      <div class="hidden lg:flex items-center gap-4">
-        <ThemeIcon />
-        <a href="#">Log in</a>
-        <Link href="#" size="md">Sign up</Link>
       </div>
-    </div>
+    </Astronav>
   </header>
 </Container>
