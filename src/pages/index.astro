@@ -11,8 +11,8 @@ import Logos from "@components/logos.astro";
  <div class="noise-container overflow-x-hidden supports-[overflow-x:clip]:overflow-x-clip">
    <div class="noise"></div>
    <div class="relative">
-     <div class="absolute left-0 top-[350px] h-[600px] w-[calc(max(50vw,300px))] -translate-y-1/2 translate-x-[-60%] rounded-full bg-blue-purple-gradient opacity-75 mask-radial-gradient"></div>
-     <div class="absolute right-0 top-[350px] h-[600px] w-[calc(max(50vw,300px))] -translate-y-1/2 translate-x-[60%] rounded-full bg-orange-yellow-gradient opacity-75 mask-radial-gradient"></div>
+     <div class="absolute left-0 top-[35rem] h-[600px] w-[calc(max(50vw,300px))] -translate-y-1/2 translate-x-[-60%] rounded-full bg-blue-purple-gradient opacity-75 mask-radial-gradient"></div>
+     <div class="absolute right-0 top-[30rem] h-[600px] w-[calc(max(50vw,300px))] -translate-y-1/2 translate-x-[60%] rounded-full bg-orange-yellow-gradient opacity-75 mask-radial-gradient"></div>
      <Container>
        <Hero />
        <Features />
@@ -24,16 +24,16 @@ import Logos from "@components/logos.astro";
 </MainLayout>
 
 <style>
- .bg-blue-purple-gradient {
-   background-image: linear-gradient(83.21deg, #3245ff, #b845ed);
+ .bg-blue-purple-gradient {;
+   background-image: linear-gradient(83.21deg, #d946ef, #b845ed);
  }
  
  .bg-orange-yellow-gradient {
-   background-image: linear-gradient(266.93deg, #f8e42e, #ff7d54);
+   background-image: linear-gradient(266.93deg, #f0abfc, #ff7d54);
  }
  
  .mask-radial-gradient {
-   -webkit-mask-image: radial-gradient(rgba(0,0,0,.8), transparent 60%);
-   mask-image: radial-gradient(rgba(0,0,0,.8), transparent 60%);
+   -webkit-mask-image: radial-gradient(rgba(0,0,0,.6), transparent 60%);
+   mask-image: radial-gradient(rgba(0,0,0,.6), transparent 60%);
  }
 </style>

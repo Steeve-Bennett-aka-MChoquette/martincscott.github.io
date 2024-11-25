@@ -1,28 +1,23 @@
 ---
+// src/layouts/MainLayout.astro
 import { SEO } from "astro-seo";
 import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
 import "@fontsource-variable/inter/index.css";
 import '@fontsource-variable/bricolage-grotesque';
-
 export interface Props {
   title: string;
 }
-
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
-
 const resolvedImageWithDomain = new URL(
   "/opengraph.jpg",
   Astro.site
 ).toString();
-
 const { title } = Astro.props;
-
 const makeTitle = title
   ? title + " | " + "Martin Choquette Scott"
   : "Dev Web";
 ---
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -30,76 +25,33 @@ const makeTitle = title
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-
-    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
-    <SEO
-      title={makeTitle}
-      description="Astroship is a starter website template for Astro built with TailwindCSS."
-      canonical={canonicalURL}
-      twitter={{
-        creator: "@surjithctly",
-        site: "@web3templates",
-        card: "summary_large_image",
-      }}
-      openGraph={{
-        basic: {
-          url: canonicalURL,
-          type: "website",
-          title: `Astroship - Starter Template for Astro`,
-          image: resolvedImageWithDomain,
-        },
-        image: {
-          alt: "Astroship Homepage Screenshot",
-        },
-      }}
-    />
-    </head>
-  <body class="bg-gray-100 dark:bg-gray-950">
+    <style is:global>
+      h1, h2, h3, h4, h5, h6 {
+        @apply text-heading;
+      }
+      p {
+        @apply text-paragraph;
+      }
+      .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+        @apply text-heading-dark;
+      }
+      .dark p {
+        @apply text-paragraph-dark;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-100 dark:bg-slate-950">
     <div class="noise-container">
       <div class="noise"></div>
       <Navbar />
       <slot />
       <Footer />
     </div>
-    <style is:global>
-      /* Improve Page speed */
-      /* https://css-tricks.com/almanac/properties/c/content-visibility/ */
-      img {
-        content-visibility: auto;
-      }
-
-      /* Noise effect styles */
-      .noise-container {
-        position: relative;
-        isolation: isolate;
-        min-height: 100vh;
-      }
-
-      .back-dark{
-        background-color: #0C0512;
-      }
-      .noise {
-        z-index: -20;
-        position: absolute;
-        inset: 0;
-        background-image: url(/src/assets/noise.webp);
-        opacity: 0.4;
-        mix-blend-mode: overlay;
-        pointer-events: none; 
-        filter: blur(20px);       
-      }
-
-      .noise-underlay {
-        z-index: -30;
-        position: relative;
-      }
-    </style>
   </body>
   <script>
     const switchTheme = document.querySelector(
       "[data-switch-theme]"
     ) as HTMLButtonElement;
-
     if (
       localStorage.getItem("appTheme") === "dark" ||
       (!("appTheme" in localStorage) &&
@@ -132,48 +84,6 @@ const makeTitle = title
             }
           }
         }
-      });
-    }
-  </script>
-  <script>
-    const toggleMenu = document.querySelector(
-      "[data-toggle-nav]"
-    ) as HTMLButtonElement;
-    const navbar = document.querySelector("[data-navbar]") as HTMLDivElement;
-    const overlayNav = document.querySelector(
-      "[data-nav-overlay]"
-    ) as HTMLDivElement;
-    if (toggleMenu) {
-      toggleMenu.addEventListener("click", e => {
-        e.preventDefault();
-        if (toggleMenu.getAttribute("data-open-nav") === "false") {
-          toggleMenu.setAttribute("data-open-nav", "true");
-          overlayNav.setAttribute("data-is-visible", "true");
-          document.body.classList.add("!overflow-y-hidden");
-		  navbar.style.height = `${navbar.scrollHeight}px`
-
-        }else{
-			toggleMenu.setAttribute("data-open-nav", "false");
-        	overlayNav.setAttribute("data-is-visible", "false");
-        	document.body.classList.remove("!overflow-y-hidden");
-		  	navbar.style.height = "0px"
-		}
-		
-        
-      });
-
-      navbar.addEventListener("click", () => {
-        toggleMenu.setAttribute("data-open-nav", "false");
-        overlayNav.setAttribute("data-is-visible", "false");
-        document.body.classList.remove("!overflow-y-hidden");
-		  	navbar.style.height = "0px"
-      });
-
-      overlayNav.addEventListener("click", () => {
-        toggleMenu.setAttribute("data-open-nav", "false");
-        	overlayNav.setAttribute("data-is-visible", "false");
-        	document.body.classList.remove("!overflow-y-hidden");
-		  	navbar.style.height = "0px"
       });
     }
   </script>
