@@ -31,6 +31,7 @@ const menuitems = [
     title: "Portfolio",
     badge: true,
     path: "https://github.com/Steeve-Bennett-aka-MChoquette/martincscott.github.io",
+    target: "_blank",
   },
 ];
 ---
@@ -39,42 +40,50 @@ const menuitems = [
   <header class="py-5">
     <Astronav>
       <div class="flex items-center justify-between">
+        <!-- Logo -->
         <a href="/" class="text-lg flex-shrink-0">
-          <span class="font-bold text-slate-800 dark:text-pink-500">Martin</span><span
-            class="text-slate-500">CScott</span>
+          <span class="font-bold text-pink-500">Martin</span>
+          <span class="text-slate-500">CScott</span>
         </a>
-
-        <MenuItems class="hidden lg:flex flex-1 justify-center">
-          <ul class="flex items-center gap-6">
-            {
-              menuitems.map((item, index) => (
-                <>
-                  {item.children && (
-                    <Dropdown
-                      title={item.title}
-                      children={item.children}
-                      lastItem={index === menuitems.length - 1}
-                    />
-                  )}
-                  {!item.children && (
-                    <li>
-                      <a href={item.path} class="flex items-center text-gray-600 hover:text-gray-900">
-                        <span>{item.title}</span>
-                        {item.badge && (
-                          <span class="ml-1 px-2 py-0.5 text-[10px] animate-pulse font-semibold uppercase text-white bg-indigo-600 rounded-full">
-                            New
-                          </span>
-                        )}
-                      </a>
-                    </li>
-                  )}
-                </>
-              ))
-            }
-          </ul>
-        </MenuItems>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden lg:flex flex-1 justify-center">
+          <MenuItems>
+            <ul class="flex items-center gap-6">
+              {
+                menuitems.map((item, index) => (
+                  <>
+                    {item.children && (
+                      <Dropdown
+                        title={item.title}
+                        children={item.children}
+                        lastItem={index === menuitems.length - 1}
+                      />
+                    )}
+                    {!item.children && (
+                      <li>
+                        <a 
+                          href={item.path} 
+                          class="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900"
+                        >
+                          {item.title}
+                          {item.badge && (
+                            <span class="ml-1 px-2 py-0.5 text-[10px] font-semibold uppercase text-white bg-purple-600 rounded-full">
+                              NEW
+                            </span>
+                          )}
+                        </a>
+                      </li>
+                    )}
+                  </>
+                ))
+              }
+            </ul>
+          </MenuItems>
+        </div>
 
         <div class="flex items-center gap-4">
+          <!-- Dark mode toggle -->
           <button 
             data-switch-theme 
             class="outline-none flex relative text-heading-2 rounded-full p-2 border border-box-border"
@@ -88,16 +97,59 @@ const menuitems = [
             <span class="sr-only">switch theme</span>
           </button>
 
+          <!-- Desktop Login/Signup -->
           <div class="hidden lg:flex items-center gap-4">
-            <a href="#" class="text-gray-600 hover:text-gray-900">Log in</a>
+            <a href="#" class="text-gray-600 dark:text-gray-200 hover:text-gray-900">Log in</a>
             <Link href="#" size="md">Sign up</Link>
           </div>
 
+          <!-- Menu Icon -->
           <div class="block lg:hidden">
-            <MenuIcon class="w-4 h-4 text-gray-800" />
+            <MenuIcon class="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </div>
         </div>
       </div>
+
+      <!-- Mobile Menu -->
+<MenuItems class="hidden lg:hidden"> <!-- Add 'hidden' here -->
+  <div class="mt-4">
+    <ul class="flex flex-col gap-4">
+      {
+        menuitems.map((item, index) => (
+          <>
+            {item.children && (
+              <Dropdown
+                title={item.title}
+                children={item.children}
+                lastItem={index === menuitems.length - 1}
+              />
+            )}
+            {!item.children && (
+              <li>
+                <a 
+                  href={item.path} 
+                  class="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900"
+                >
+                  {item.title}
+                  {item.badge && (
+                    <span class="ml-1 px-2 py-0.5 text-[10px] font-semibold uppercase text-white bg-purple-600 rounded-full">
+                      NEW
+                    </span>
+                  )}
+                </a>
+              </li>
+            )}
+          </>
+        ))
+      }
+    </ul>
+
+    <div class="flex flex-col gap-4 mt-4">
+      <Link href="#" style="muted" block size="md">Log in</Link>
+      <Link href="#" size="md" block>Sign up</Link>
+    </div>
+  </div>
+  </MenuItems>
     </Astronav>
   </header>
 </Container>
