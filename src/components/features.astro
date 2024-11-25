@@ -56,8 +56,8 @@ const features = [
   {
     features.map((item) => (
       <div class="flex gap-12 items-center self-start shadow-xl border border-gray-200 transition hover:shadow-lg p-8 rounded-lg h-full">
-        <div class="self-start mt-1 bg-black rounded-full  p-2 w-8 h-8 shrink-0">
-          <Icon class="text-white text-4xl" name={item.icon} />
+        <div class="flex justify-center item-center mt-1 bg-black dark:bg-white rounded-full  p-2 w-16 h-16 shrink-0">
+          <Icon class="text-white dark:text-black text-4xl self-center" name={item.icon} />
         </div>
         <div>
           <h3 class="font-semibold text-lg">{item.title}</h3>{" "}
