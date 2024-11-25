@@ -6,9 +6,9 @@ export default {
     extend: {
       colors: {
         heading: '#1a202c', // Light theme heading color
-        paragraph: '#4a5568', // Light theme paragraph color
+        paragraph: '#353d4a', // Light theme paragraph color
         'heading-dark': '#e2e8f0', // Dark theme heading color
-        'paragraph-dark': '#a0aec0', // Dark theme paragraph color
+        'paragraph-dark': '#dce2e8', // Dark theme paragraph color
       },
     },
   },
