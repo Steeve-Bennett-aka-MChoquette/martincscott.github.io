@@ -1,0 +1,102 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+  indexUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl, indexUrl } = Astro.props;
+
+// Generate limited pagination links with ellipses
+const getVisiblePageNumbers = (current: number, total: number, maxVisible: number = 5) => {
+  // If we have fewer pages than the max visible, show all pages
+  if (total <= maxVisible) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  
+  // Always include first and last page
+  const firstPage = 1;
+  const lastPage = total;
+  
+  // Calculate the middle pages
+  const leftSiblingIndex = Math.max(current - 1, firstPage);
+  const rightSiblingIndex = Math.min(current + 1, lastPage);
+  
+  // Should show dots on left side, right side, or both
+  const shouldShowLeftDots = leftSiblingIndex > 2;
+  const shouldShowRightDots = rightSiblingIndex < lastPage - 1;
+  
+  // Default case: show dots on both sides
+  if (shouldShowLeftDots && shouldShowRightDots) {
+    const middlePages = [leftSiblingIndex, current, rightSiblingIndex];
+    return [firstPage, 'ellipsis', ...middlePages, 'ellipsis', lastPage];
+  }
+  
+  // Show dots on the right side only
+  if (!shouldShowLeftDots && shouldShowRightDots) {
+    const leftPages = Array.from({ length: 4 }, (_, i) => i + 1);
+    return [...leftPages, 'ellipsis', lastPage];
+  }
+  
+  // Show dots on the left side only
+  if (shouldShowLeftDots && !shouldShowRightDots) {
+    const rightPages = Array.from({ length: 4 }, (_, i) => total - 3 + i);
+    return [firstPage, 'ellipsis', ...rightPages];
+  }
+  
+  // Should never reach this, but fallback to basic range
+  return Array.from({ length: Math.min(maxVisible, total) }, (_, i) => i + 1);
+};
+
+const visiblePages = getVisiblePageNumbers(currentPage, totalPages);
+---
+
+<nav aria-label="Pagination" class="flex justify-center mt-16">
+  <ul class="inline-flex items-center -space-x-px">
+    <!-- Previous button -->
+    <li>
+      <a href={currentPage === 1 ? "#" : currentPage === 2 ? indexUrl : `${baseUrl}/${currentPage - 1}`}
+         class={`block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-white'}`}
+         aria-disabled={currentPage === 1}>
+        <span class="sr-only">Previous</span>
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+      </a>
+    </li>
+    
+    <!-- Page numbers -->
+    {visiblePages.map(page => {
+      if (page === 'ellipsis') {
+        return (
+          <li>
+            <span class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">
+              &hellip;
+            </span>
+          </li>
+        );
+      }
+      
+      return (
+        <li>
+          <a href={page === 1 ? indexUrl : `${baseUrl}/${page}`}
+             class={`px-3 py-2 leading-tight border border-gray-300 dark:border-gray-700 ${page === currentPage 
+               ? 'text-blue-600 bg-blue-50 dark:text-rose-flash dark:bg-gray-700' 
+               : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}`}
+             aria-current={page === currentPage ? 'page' : undefined}>
+            {page}
+          </a>
+        </li>
+      );
+    })}
+    
+    <!-- Next button -->
+    <li>
+      <a href={currentPage === totalPages ? "#" : `${baseUrl}/${currentPage + 1}`}
+         class={`block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-white'}`}
+         aria-disabled={currentPage === totalPages}>
+        <span class="sr-only">Next</span>
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+      </a>
+    </li>
+  </ul>
+</nav>
