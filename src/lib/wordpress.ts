@@ -3,7 +3,7 @@
  */
 
 // Use a public WordPress demo site
-const WORDPRESS_API_URL = 'https://wpdeveloper.com/wp-json/wp/v2';
+const WORDPRESS_API_URL = 'https://catapultecommunication.com/wp-json/wp/v2';
 // Alternative sources if the above doesn't work:
 // 'https://techcrunch.com/wp-json/wp/v2'
 // 'https://content.wpvip.com/wp-json/wp/v2'
