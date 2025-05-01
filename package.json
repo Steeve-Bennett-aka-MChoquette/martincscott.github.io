@@ -16,7 +16,7 @@
     "@iconify-json/bx": "^1.2.1",
     "@iconify-json/simple-icons": "^1.2.12",
     "@iconify-json/uil": "^1.2.1",
-    "astro": "^4.16.13",
+    "astro": "^5.7.10",
     "astro-icon": "^1.1.4",
     "astro-navbar": "^2.3.7",
     "astro-seo": "^0.8.4",
@@ -25,7 +25,7 @@
     "typescript": "^5.7.2"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^5.1.2",
+    "@astrojs/tailwind": "^6.0.2",
     "@tailwindcss/typography": "^0.5.15",
     "tailwindcss": "^3.4.15"
   }
