@@ -3,7 +3,7 @@ import tailwind from '@astrojs/tailwind';
 import icon from "astro-icon";
 
 export default defineConfig({
-  site: 'https://martincscott.com',
+  site: 'https://static.martincscott.com',
   base: '/',
   outDir: './dist',
   build: {
