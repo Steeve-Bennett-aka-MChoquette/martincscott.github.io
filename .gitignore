@@ -24,16 +24,3 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# documentation files
-COMPONENTS.md
-CONTACT-FORM.md
-DARK-MODE.md
-DEPLOYMENT.md
-DOCUMENTATION.md
-DOCUMENTATION-INDEX.md
-DOCUMENTATION-README.md
-SEO.md
-STYLING.md
-WORDPRESS-INTEGRATION.md
-.docs/
-manage-docs.js
