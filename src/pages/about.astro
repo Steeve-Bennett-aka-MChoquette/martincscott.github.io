@@ -1,28 +1,28 @@
 ---
 import { Picture } from "astro:assets";
-import profileImage from "@/assets/placeholder.webp";
+import profileImage from "@/assets/profile-martin.webp";
 import Layout from "@layouts/MainLayout.astro";
 import Container from "@components/container.astro";
 import Sectionhead from "@components/sectionhead.astro";
 
 // Define your skills/technologies
-const skills = [
-  {
-    name: "Web Development",
-    description: "Full-stack development with modern frameworks and tools",
-    icon: "💻"
-  },
-  {
-    name: "Technical Writing",
-    description: "Creating clear, concise technical documentation and articles",
-    icon: "✍️"
-  },
-  {
-    name: "Open Source",
-    description: "Contributing to and maintaining open source projects",
-    icon: "🌐"
-  }
-];
+    const skills = [
+      {
+        name: "UX/UI Design",
+        description: "Creating intuitive user experiences and modern interface designs",
+        icon: "🎨"
+      },
+      {
+        name: "Digital Transformation",
+        description: "Helping startups and enterprises evolve through innovative technology solutions",
+        icon: "🚀"
+      },
+      {
+        name: "Startup Advisory",
+        description: "Advisor and partner to digital and fintech startups",
+        icon: "💡"
+      }
+    ];
 
 ---
 
@@ -42,29 +42,27 @@ const skills = [
             sizes="(max-width: 800px) 100vw, 400px"
             width={600}
             height={800}
-            class="w-full rounded-md transition shadow-lg bg-white object-cover object-center"
+            class="w-full rounded-md transition shadow-lg dark:bg-semi-deep-purple border-2 border-rose-flash object-cover object-center"
           />
         </div>
       </div>
       
       <div class="flex-1 flex flex-col items-center justify-center">
         <h2 class="font-bold text-3xl text-gray-800">
-          Hi, I'm Martin
+          Hi, I'm Martin Choquette-Scott
         </h2>
         <p class="text-lg leading-relaxed text-slate-500 mt-3">
-          I'm a software developer passionate about creating efficient, user-friendly 
-          solutions and sharing knowledge through writing and open source contributions.
+          As a UX/UI specialist and digital innovator, I help startups and enterprises create exceptional digital products. With a background in political science and e-business, I combine technical expertise with strategic thinking to deliver solutions that transform businesses.
         </p>
         <p class="text-lg leading-relaxed text-slate-500 mt-3">
-          With experience in full-stack development, I focus on building scalable 
-          applications and contributing to the developer community.
+          I work with companies, agencies, and startups to develop digital strategies, implement cutting-edge technologies, and serve as a trusted advisor in the fintech space. My approach focuses on user-centered design and measurable business outcomes.
         </p>
       </div>
     </div>
 
     <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12">
       {skills.map((skill) => (
-        <div class="group p-5 rounded-lg border border-gray-200 transition hover:shadow-lg">
+        <div class="group p-5 rounded-lg shadow-xl dark:bg-semi-deep-purple border border-rose-flash transition hover:shadow-lg">
           <div class="text-4xl mb-4">{skill.icon}</div>
           <h3 class="text-lg font-medium text-gray-800">
             {skill.name}
@@ -77,9 +75,9 @@ const skills = [
     </div>
 
     <div class="mx-auto max-w-4xl mt-16 text-center">
-      <h2 class="font-bold text-3xl text-gray-800 mb-8">
-        Want to work together?
-      </h2>
+        <h2 class="font-bold text-3xl text-gray-800 mb-8">
+          Ready to Transform Your Digital Vision into Reality?
+        </h2>
       <div class="flex gap-4 justify-center">
         <a
           href="/contact"

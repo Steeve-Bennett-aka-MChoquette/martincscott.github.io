@@ -10,6 +10,7 @@ export default {
         'heading-dark': '#e2e8f0', // Dark theme heading color
         'paragraph-dark': '#dce2e8', // Dark theme paragraph color
         'deep-purple': '#0C0512',
+        "semi-deep-purple": '#211B26',
         'rose-flash': '#D45CFE',
         primary: '#3b82f6', // blue-500
       },
