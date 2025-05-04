@@ -1,33 +1,56 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
+import Link from "@components/ui/link.astro";
+import { Icon } from "astro-icon/components";
 
 export const title = "Login";
 ---
 
 <MainLayout title={title}>
   <div class="auth-container">
-    <h1>Login</h1>
+    <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Login</h1>
     
-    <form id="login-form">
+    <form id="login-form" class="space-y-4">
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+        <input type="email" id="email" name="email" required 
+          class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       </div>
       
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
+        <label for="password" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+        <input type="password" id="password" name="password" required
+          class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       </div>
       
-      <button type="submit">Login</button>
-      <p class="auth-link">Don't have an account? <a href="/auth/signup">Sign up</a></p>
-      <p class="auth-link"><a href="/auth/reset-password">Forgot password?</a></p>
+      <button type="submit" id="login-button"
+        class="w-full rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-5 py-2.5 bg-black text-white hover:bg-gray-800 border-2 border-transparent dark:bg-white dark:text-black dark:hover:bg-gray-200 flex items-center justify-center">
+        <span>Login</span>
+      </button>
+      
+      <p class="auth-link text-gray-700 dark:text-gray-300 text-center text-sm mt-4">
+        Don't have an account? 
+        <a href="/auth/signup" class="text-blue-500 hover:underline dark:text-blue-400 ml-1">Sign up</a>
+      </p>
+      <p class="auth-link text-gray-700 dark:text-gray-300 text-center text-sm">
+        <a href="/auth/reset-password" class="text-blue-500 hover:underline dark:text-blue-400">Forgot password?</a>
+      </p>
     </form>
 
-    <div class="social-login">
-      <h2>Or login with</h2>
-      <button id="github-login">GitHub</button>
-      <button id="google-login">Google</button>
+    <div class="social-login mt-6 text-center">
+      <h2 class="mb-3 text-base font-medium text-gray-700 dark:text-gray-300">Or login with</h2>
+      <div class="flex justify-center space-x-2">
+        <button id="github-login" 
+          class="m-1 rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-4 py-2 bg-white border-2 border-black hover:bg-gray-100 text-black dark:bg-black dark:border-white dark:hover:bg-gray-800 dark:text-white flex items-center">
+          <Icon class="text-black dark:text-white w-4 h-4 mr-2" name="bx:bxl-github" />
+          GitHub
+        </button>
+        <button id="google-login"
+          class="m-1 rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-4 py-2 bg-white border-2 border-black hover:bg-gray-100 text-black dark:bg-black dark:border-white dark:hover:bg-gray-800 dark:text-white flex items-center">
+          <Icon class="text-black dark:text-white w-4 h-4 mr-2" name="bx:bxl-google" />
+          Google
+        </button>
+      </div>
     </div>
   </div>
 
@@ -86,53 +109,25 @@ export const title = "Login";
 
   <style>
     .auth-container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 2rem;
+      @apply mt-20 max-w-md mx-auto p-6 bg-white border-2 dark:bg-deep-purple dark:border-rose-flash rounded-lg shadow-md;
     }
     .form-group {
-      margin-bottom: 1rem;
+      @apply mb-4;
     }
     label {
-      display: block;
-      margin-bottom: 0.5rem;
+      @apply block mb-2 text-sm font-medium;
     }
     input {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    button:hover {
-      background-color: #2563eb;
+      @apply w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white;
     }
     .auth-link {
-      margin-top: 1rem;
-      text-align: center;
+      @apply mt-4 text-center text-sm;
     }
     .social-login {
-      margin-top: 2rem;
-      text-align: center;
+      @apply mt-6 text-center;
     }
     .social-login h2 {
-      margin-bottom: 1rem;
-    }
-    .social-login button {
-      margin: 0.5rem;
-      background-color: #ef4444;
-    }
-    .social-login button:hover {
-      background-color: #dc2626;
+      @apply mb-3 text-base font-medium;
     }
   </style>
 </MainLayout>

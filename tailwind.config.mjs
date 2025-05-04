@@ -11,8 +11,9 @@ export default {
         'paragraph-dark': '#dce2e8', // Dark theme paragraph color
         'deep-purple': '#0C0512',
         'rose-flash': '#D45CFE',
-  },
+        primary: '#3b82f6', // blue-500
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 }
