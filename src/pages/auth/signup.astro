@@ -1,0 +1,142 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+export const title = "Sign Up";
+---
+
+<MainLayout title={title}>
+  <div class="auth-container">
+    <h1>Sign Up</h1>
+    
+    <form id="signup-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <p class="help-text">Password must be at least 6 characters long</p>
+      </div>
+      
+      <button type="submit">Create Account</button>
+      <p class="auth-link">Already have an account? <a href="/auth/login">Log in</a></p>
+    </form>
+
+    <div class="social-login">
+      <h2>Or sign up with</h2>
+      <button id="github-signup">GitHub</button>
+      <button id="google-signup">Google</button>
+    </div>
+  </div>
+
+  <script>
+    // This script runs in the browser
+    import { supabase } from '../../utils/supabase';
+    
+    // Handle email/password signup
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = (document.getElementById('email') as HTMLInputElement).value;
+      const password = (document.getElementById('password') as HTMLInputElement).value;
+      
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password
+        });
+        
+        if (error) throw error;
+        
+        // Show confirmation message
+        alert('Check your email for the confirmation link!');
+      } catch (error) {
+        alert('Error signing up: ' + error.message);
+      }
+    });
+    
+    // Handle GitHub signup
+    document.getElementById('github-signup').addEventListener('click', async () => {
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'github',
+        });
+        
+        if (error) throw error;
+      } catch (error) {
+        alert('Error with GitHub signup: ' + error.message);
+      }
+    });
+    
+    // Handle Google signup
+    document.getElementById('google-signup').addEventListener('click', async () => {
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+        });
+        
+        if (error) throw error;
+      } catch (error) {
+        alert('Error with Google signup: ' + error.message);
+      }
+    });
+  </script>
+
+  <style>
+    .auth-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    .help-text {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+    .auth-link {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .social-login {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .social-login h2 {
+      margin-bottom: 1rem;
+    }
+    .social-login button {
+      margin: 0.5rem;
+      background-color: #ef4444;
+    }
+    .social-login button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</MainLayout>
