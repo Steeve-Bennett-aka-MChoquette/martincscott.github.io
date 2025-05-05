@@ -1,0 +1,130 @@
+---
+// src/layouts/MainLayout.astro
+import { SEO } from "astro-seo";
+import Footer from "@components/footer.astro";
+import Navbar from "@components/navbar/navbar.astro";
+import "@fontsource-variable/inter/index.css";
+
+export interface Props {
+  title: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const resolvedImageWithDomain = new URL(
+  "/opengraph.jpg",
+  Astro.site
+).toString();
+
+const { title } = Astro.props;
+const makeTitle = title
+  ? title + " | " + "Martin Choquette Scott"
+  : "Dev Web";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <style is:global>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+    
+      /* Base heading styles with Orbitron */
+      h1, h2, h3, h4, h5, h6 {
+        @apply text-heading;
+        font-family: "Orbitron", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-weight: 600;
+      }
+    
+      /* Specific heading weights */
+      h1 { font-weight: 700; }
+      h2 { font-weight: 600; }
+      h3 { font-weight: 500; }
+    
+      /* Text styles with Inter */
+      p {
+        @apply text-paragraph;
+        font-family: "Inter", sans-serif;
+      }
+    
+      .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+        @apply text-heading-dark;
+      }
+    
+      .dark p {
+        @apply text-paragraph-dark;
+      }
+    
+      /* Additional utility classes */
+      .text-inter {
+        font-family: "Inter", sans-serif;
+      }
+      
+      /* Orbitron utilities remain the same */
+      .orbitron-heading {
+        font-family: "Orbitron", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+      }
+      
+      .orbitron-regular { font-weight: 400; }
+      .orbitron-medium { font-weight: 500; }
+      .orbitron-semibold { font-weight: 600; }
+      .orbitron-bold { font-weight: 700; }
+      .orbitron-black { font-weight: 900; }
+    </style>
+  </head>
+<body class="bg-slate-100 dark:bg-deep-purple">
+    <div class="bg-transparent">
+      <div class="bg-transparent"></div>
+      <Navbar />
+        <slot />
+      <Footer />
+    </div>
+  </body>
+  <script>
+    const switchTheme = document.querySelector(
+      "[data-switch-theme]"
+    ) as HTMLButtonElement;
+
+    if (
+      localStorage.getItem("appTheme") === "dark" ||
+      (!("appTheme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
+    if (switchTheme) {
+      switchTheme.addEventListener("click", (e) => {
+        e.preventDefault();
+        const doc = document.documentElement;
+        if (doc) {
+          if (localStorage.getItem("appTheme")) {
+            if (localStorage.getItem("appTheme") === "light") {
+              doc.classList.add("dark");
+              localStorage.setItem("appTheme", "dark");
+            } else {
+              document.documentElement.classList.remove("dark");
+              localStorage.setItem("appTheme", "light");
+            }
+          } else {
+            if (doc.classList.contains("dark")) {
+              doc.classList.remove("dark");
+              localStorage.setItem("appTheme", "light");
+            } else {
+              doc.classList.add("dark");
+              localStorage.setItem("appTheme", "dark");
+            }
+          }
+        }
+      });
+    }
+  </script>
+</html>
