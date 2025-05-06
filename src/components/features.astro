@@ -4,40 +4,40 @@ import { Icon } from "astro-icon/components";
 
 const features = [
   {
-    title: "Bring Your Own Framework",
+    title: "Software Development",
     description:
-      "Build your site using React, Svelte, Vue, Preact, web components, or just plain ol' HTML + JavaScript.",
-    icon: "bx:bxs-briefcase",
+      "Experienced in both functional and OOP paradigms across Dart, Python, Java, JavaScript, and TypeScript. Focused on clean architecture and scalable solutions.",
+    icon: "bx:bx-code",
   },
   {
-    title: "100% Static HTML, No JS",
+    title: "Frontend Development",
     description:
-      "Astro renders your entire page to static HTML, removing all JavaScript from your final build by default.",
-    icon: "bx:bxs-window-alt",
+      "React/NextJS expert with 5+ years of experience. Passionionate about UI/UX design and modern web standards using HTML, CSS, and JavaScript frameworks.",
+    icon: "bx:bx-desktop",
   },
   {
-    title: "On-Demand Components",
+    title: "Flutter Development",
     description:
-      "Need some JS? Astro can automatically hydrate interactive components when they become visible on the page.  ",
-    icon: "bx:bxs-data",
+      "Skilled in building cross-platform mobile applications for Android and iOS using Flutter framework with native performance and responsive design.",
+    icon: "bx:bxl-flutter",
   },
   {
-    title: "Broad Integration",
+    title: "WordPress Expertise",
     description:
-      "Astro supports TypeScript, Scoped CSS, CSS Modules, Sass, Tailwind, Markdown, MDX, and any other npm packages.",
-    icon: "bx:bxs-bot",
+      "Full-stack WordPress developer specializing in custom themes, plugins, and headless implementations with REST API and GraphQL integration.",
+    icon: "bx:bxl-wordpress",
   },
   {
-    title: "SEO Enabled",
+    title: "Vue JS Development",
     description:
-      "Automatic sitemaps, RSS feeds, pagination and collections take the pain out of SEO and syndication. It just works!",
-    icon: "bx:bxs-file-find",
+      "Proficient in Vue 3 with component-based architecture, Vuex/Pinia state management, and modern tooling like Vite and Vue Router.",
+    icon: "bx:bxl-vuejs",
   },
   {
-    title: "Community",
+    title: "Docker & Open Source",
     description:
-      "Astro is an open source project powered by hundreds of contributors making thousands of individual contributions.",
-    icon: "bx:bxs-user",
+      "Containerization expert with Docker and Kubernetes. Active contributor to open source projects with CI/CD pipeline implementation experience.",
+    icon: "bx:bxl-docker",
   },
 ];
 ---
@@ -56,13 +56,13 @@ const features = [
   {
     features.map((item) => (
       <div class="gradient-border">
-        <div class="flex gap-12 items-center self-start feature-card">
+        <div class="flex gap-12 items-center self-start feature-card bg-white dark:bg-deep-purple shadow-md rounded-lg p-6">
           <div class="flex justify-center item-center mt-1 bg-black dark:bg-white rounded-full p-2 w-16 h-16 shrink-0">
             <Icon class="text-white dark:text-black text-4xl self-center" name={item.icon} />
           </div>
           <div>
             <h3 class="font-semibold text-lg">{item.title}</h3>
-            <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
+            <p class="text-slate-950 dark:text-paragraph-dark mt-2 leading-relaxed">{item.description}</p>
           </div>
         </div>
       </div>
@@ -103,7 +103,6 @@ const features = [
 .feature-card {
   padding: 2rem;
   height: 100%;
-  background: theme('colors.deep-purple'); /* Match your dark background */
   border-radius: 0.5rem;
 }
 </style>
