@@ -55,15 +55,55 @@ const features = [
 <div class="grid sm:grid-cols-2 md:grid-cols-3 mt-16 gap-6">
   {
     features.map((item) => (
-      <div class="flex gap-12 items-center self-start shadow-xl border border-rose-flash transition hover:shadow-lg p-8 rounded-lg h-full">
-        <div class="flex justify-center item-center mt-1 bg-black dark:bg-white rounded-full  p-2 w-16 h-16 shrink-0">
-          <Icon class="text-white dark:text-black text-4xl self-center" name={item.icon} />
-        </div>
-        <div>
-          <h3 class="font-semibold text-lg">{item.title}</h3>{" "}
-          <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
+      <div class="gradient-border">
+        <div class="flex gap-12 items-center self-start feature-card">
+          <div class="flex justify-center item-center mt-1 bg-black dark:bg-white rounded-full p-2 w-16 h-16 shrink-0">
+            <Icon class="text-white dark:text-black text-4xl self-center" name={item.icon} />
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg">{item.title}</h3>
+            <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
+          </div>
         </div>
       </div>
     ))
   }
 </div>
+
+<style>
+  /* Create a CSS-only gradient border using all 6 colors from the image */
+.gradient-border {
+  position: relative;
+  border-radius: 0.5rem; /* 8px */
+  background: #1e1e2e; /* Dark background */
+  z-index: 1;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  top: -1.5px;
+  left: -1.5px;
+  right: -1.5px;
+  bottom: -1.5px;
+  background: linear-gradient(
+    45deg,
+    theme('colors.fuchsia.500'),
+    theme('colors.custom-purple'),
+    theme('colors.fuchsia.300'),
+    theme('colors.custom-orange'),
+    theme('colors.custom-cyan'),
+    theme('colors.custom-pink')   
+  );
+  border-radius: 0.625rem; /* 10px, slightly larger than the inner element */
+  z-index: -1;
+}
+
+/* Apply this class to your feature cards */
+.feature-card {
+  padding: 2rem;
+  height: 100%;
+  background: theme('colors.deep-purple'); /* Match your dark background */
+  border-radius: 0.5rem;
+}
+</style>
