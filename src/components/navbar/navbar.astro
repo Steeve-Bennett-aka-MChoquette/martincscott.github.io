@@ -38,7 +38,7 @@ const menuitems = [
 
 <Container class="bg-transparent">
 <header class="py-5 bg-transparent z-30">
-    <Astronav>
+    <Astronav aria-label="Main navigation">
       <div class="flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="text-lg flex-shrink-0">
@@ -48,7 +48,7 @@ const menuitems = [
         
         <!-- Desktop Menu -->
         <div class="hidden lg:flex flex-1 justify-center">
-          <MenuItems>
+          <MenuItems aria-label="Main menu">
             <ul class="flex items-center gap-6">
               {
                 menuitems.map((item, index) => (

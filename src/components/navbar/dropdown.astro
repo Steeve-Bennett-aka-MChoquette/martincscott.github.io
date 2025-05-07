@@ -6,6 +6,8 @@ const { title, lastItem, children } = Astro.props;
 <li class="relative">
   <DropdownContainer class="group">
     <button
+      aria-expanded="false"
+      aria-haspopup="true"
       class="flex items-center gap-1 w-full lg:w-auto lg:px-3 py-2 text-gray-600 dark:text-gray-200 hover:text-gray-900 uppercase">
       <span>{title}</span>
       <svg

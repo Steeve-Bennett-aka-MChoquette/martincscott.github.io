@@ -8,19 +8,22 @@ const emailJsTemplateId = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
 const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
 ---
 
-<form
+ <form
  id="form"
  class="needs-validation"
  novalidate>
  <div class="mb-5">
+   <label for="from_name" class="sr-only">Full Name</label>
    <input
+     id="from_name"
      type="text"
      placeholder="Full Name"
      required
      class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
      name="from_name"
+     aria-describedby="name-error"
    />
-   <div class="empty-feedback invalid-feedback text-red-400 text-sm mt-1">
+   <div id="name-error" class="empty-feedback invalid-feedback text-red-400 text-sm mt-1" aria-live="assertive">
      Please provide your full name.
    </div>
  </div>
@@ -33,22 +36,24 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
      name="reply_to"
      required
      class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
+     aria-describedby="email-error"
    />
-   <div class="empty-feedback text-red-400 text-sm mt-1">
-     Please provide your email address.
-   </div>
-   <div class="invalid-feedback text-red-400 text-sm mt-1">
-     Please provide a valid email address.
+   <div id="email-error" class="empty-feedback invalid-feedback text-red-400 text-sm mt-1" aria-live="assertive">
+     <span class="empty-feedback">Please provide your email address.</span>
+     <span class="invalid-feedback">Please provide a valid email address.</span>
    </div>
  </div>
  <div class="mb-3">
+   <label for="message" class="sr-only">Your Message</label>
    <textarea
+     id="message"
      name="message"
      required
      placeholder="Your Message"
      class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none h-36 focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
+     aria-describedby="message-error"
    ></textarea>
-   <div class="empty-feedback invalid-feedback text-red-400 text-sm mt-1">
+   <div id="message-error" class="empty-feedback invalid-feedback text-red-400 text-sm mt-1" aria-live="assertive">
      Please enter your message.
    </div>
  </div>
@@ -59,7 +64,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
  </div>
 
  <Button type="submit" size="lg" block>Send Message</Button>
- <div id="result" class="mt-3 text-center"></div>
+ <div id="result" class="mt-3 text-center" role="alert" aria-live="polite"></div>
 </form>
 
 <style>
@@ -116,8 +121,22 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
    e.preventDefault();
    form.classList.add("was-validated");
 
+   // Remove any existing error messages
+   result.classList.remove("text-red-500", "text-green-500");
+   result.innerHTML = "";
+
    if (!form.checkValidity()) {
-     form.querySelectorAll(":invalid")[0].focus();
+     // Show the first validation error
+     const firstInvalid = form.querySelectorAll(":invalid")[0];
+     const invalidInput = firstInvalid.querySelector("input, textarea");
+     (invalidInput || firstInvalid).focus();
+     
+     // Show error message
+     const errorDiv = firstInvalid.querySelector(".invalid-feedback, .empty-feedback");
+     if (errorDiv) {
+       errorDiv.style.display = "block";
+     }
+     
      return;
    }
 
@@ -128,13 +147,19 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
    }
 
    try {
+     // Clear all error messages
+     document.querySelectorAll(".invalid-feedback, .empty-feedback").forEach(el => {
+       el.style.display = "none";
+     });
+     
      result.innerHTML = "Sending...";
+     result.setAttribute("aria-busy", "true");
 
      const templateParams = {
        from_name: form.from_name.value,
        reply_to: form.reply_to.value,
        message: form.message.value,
-       'cf-turnstile-response': window.turnstileToken
+      'cf-turnstile-response': window.turnstileToken
      };
 
      const response = await emailjs.send(
@@ -159,11 +184,15 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
      setTimeout(() => {
        result.style.display = "none";
      }, 5000);
+     
+     // Remove aria-busy attribute
+     result.removeAttribute("aria-busy");
 
    } catch(error) {
      console.log('FAILED...', error);
      result.classList.add("text-red-500");
      result.innerHTML = "Failed to send: " + error.text;
+     result.removeAttribute("aria-busy");
    }
- });
+ };
 </script>
