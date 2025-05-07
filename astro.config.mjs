@@ -11,7 +11,13 @@ export default defineConfig({
   },
   integrations: [
     tailwind(),
-    icon({ compiler: 'astro' })
+    icon({ 
+      compiler: 'astro',
+      include: {
+        // Include BoxIcons (bx) for contact page icons
+        bx: '*', // This will include all BoxIcons
+      }
+    })
   ],
   vite: {
     resolve: {

@@ -22,6 +22,7 @@
     "astro-icon": "^1.1.4",
     "astro-navbar": "^2.3.7",
     "astro-seo": "^0.8.4",
+    "boxicons": "^2.1.4",
     "dotenv": "^16.4.5",
     "martincscott.github.io": "file:",
     "typescript": "^5.7.2"
