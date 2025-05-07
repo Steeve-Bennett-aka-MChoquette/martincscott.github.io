@@ -94,10 +94,10 @@
   .gradient-border::before {
     content: "";
     position: absolute;
-    top: -1.5px;
-    left: -1.5px;
-    right: -1.5px;
-    bottom: -1.5px;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
     background: linear-gradient(
       45deg,
       #d946ef, /* fuchsia-500 */
