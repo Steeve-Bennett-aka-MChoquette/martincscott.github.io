@@ -5,6 +5,7 @@ import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
 import "@fontsource-variable/inter/index.css";
 
+
 export interface Props {
   title: string;
 }
@@ -29,53 +30,8 @@ const makeTitle = title
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <style is:global>
+      @import "../styles/utilities.css";
       @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
-    
-      /* Base heading styles with Orbitron */
-      h1, h2, h3, h4, h5, h6 {
-        @apply text-heading;
-        font-family: "Orbitron", sans-serif;
-        font-optical-sizing: auto;
-        font-style: normal;
-        font-weight: 600;
-      }
-    
-      /* Specific heading weights */
-      h1 { font-weight: 700; }
-      h2 { font-weight: 600; }
-      h3 { font-weight: 500; }
-    
-      /* Text styles with Inter */
-      p {
-        @apply text-paragraph;
-        font-family: "Inter", sans-serif;
-      }
-    
-      .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-        @apply text-heading-dark;
-      }
-    
-      .dark p {
-        @apply text-paragraph-dark;
-      }
-    
-      /* Additional utility classes */
-      .text-inter {
-        font-family: "Inter", sans-serif;
-      }
-      
-      /* Orbitron utilities remain the same */
-      .orbitron-heading {
-        font-family: "Orbitron", sans-serif;
-        font-optical-sizing: auto;
-        font-style: normal;
-      }
-      
-      .orbitron-regular { font-weight: 400; }
-      .orbitron-medium { font-weight: 500; }
-      .orbitron-semibold { font-weight: 600; }
-      .orbitron-bold { font-weight: 700; }
-      .orbitron-black { font-weight: 900; }
     </style>
   </head>
 <body class="bg-slate-100 dark:bg-deep-purple">

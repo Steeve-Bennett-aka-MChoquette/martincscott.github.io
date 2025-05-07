@@ -52,57 +52,23 @@ const features = [
   </p>
 </div>
 
-<div class="grid sm:grid-cols-2 md:grid-cols-3 mt-16 gap-6">
+<div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-16 gap-12">
   {
     features.map((item) => (
       <div class="gradient-border">
-        <div class="flex gap-12 items-center self-start feature-card bg-white dark:bg-deep-purple shadow-md rounded-lg p-6">
-          <div class="flex justify-center item-center mt-1 bg-black dark:bg-white rounded-full p-2 w-16 h-16 shrink-0">
-            <Icon class="text-white dark:text-black text-4xl self-center" name={item.icon} />
+<div class="flex flex-col feature-card bg-white dark:bg-deep-purple shadow-md rounded-lg p-6 dark-transition">
+          <!-- Header section with icon and title in a 1:2 grid -->
+          <div class="grid grid-cols-3 md:grid-cols-1 gap-4 items-center mb-4">
+            <div class="flex justify-center items-center bg-rose-flash dark:bg-custom-purple rounded-full p-2 w-16 h-16 shrink-0">
+              <Icon class="text-white dark:text-slate-300 text-4xl self-center" name={item.icon} />
+            </div>
+            <h3 class="font-semibold text-lg col-span-2">{item.title}</h3>
           </div>
-          <div>
-            <h3 class="font-semibold text-lg">{item.title}</h3>
-            <p class="text-slate-950 dark:text-paragraph-dark mt-2 leading-relaxed">{item.description}</p>
-          </div>
+          
+          <!-- Paragraph in its own section -->
+          <p class="text-slate-950 dark:text-paragraph-dark mt-2 leading-relaxed">{item.description}</p>
         </div>
       </div>
     ))
   }
 </div>
-
-<style>
-  /* Create a CSS-only gradient border using all 6 colors from the image */
-.gradient-border {
-  position: relative;
-  border-radius: 0.5rem; /* 8px */
-  background: #1e1e2e; /* Dark background */
-  z-index: 1;
-}
-
-.gradient-border::before {
-  content: "";
-  position: absolute;
-  top: -1.5px;
-  left: -1.5px;
-  right: -1.5px;
-  bottom: -1.5px;
-  background: linear-gradient(
-    45deg,
-    theme('colors.fuchsia.500'),
-    theme('colors.custom-purple'),
-    theme('colors.fuchsia.300'),
-    theme('colors.custom-orange'),
-    theme('colors.custom-cyan'),
-    theme('colors.custom-pink')   
-  );
-  border-radius: 0.625rem; /* 10px, slightly larger than the inner element */
-  z-index: -1;
-}
-
-/* Apply this class to your feature cards */
-.feature-card {
-  padding: 2rem;
-  height: 100%;
-  border-radius: 0.5rem;
-}
-</style>
