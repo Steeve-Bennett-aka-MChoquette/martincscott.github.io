@@ -1,43 +1,41 @@
 ---
-// @ts-ignore
-import { Icon } from "astro-icon/components";
-
+// Placeholder image paths - to be replaced with actual images later
 const projects = [
   {
     title: "Software Development",
     description:
       "Experienced in both functional and OOP paradigms across Dart, Python, Java, JavaScript, and TypeScript. Focused on clean architecture and scalable solutions.",
-    icon: "bx:bx-code",
+    imageUrl: "/images/project-software.jpg",
   },
   {
     title: "Frontend Development",
     description:
       "React/NextJS expert with 5+ years of experience. Passionionate about UI/UX design and modern web standards using HTML, CSS, and JavaScript frameworks.",
-    icon: "bx:bx-desktop",
+    imageUrl: "/images/project-frontend.jpg",
   },
   {
     title: "Flutter Development",
     description:
       "Skilled in building cross-platform mobile applications for Android and iOS using Flutter framework with native performance and responsive design.",
-    icon: "bx:bxl-flutter",
+    imageUrl: "/images/project-flutter.jpg",
   },
   {
     title: "WordPress Expertise",
     description:
       "Full-stack WordPress developer specializing in custom themes, plugins, and headless implementations with REST API and GraphQL integration.",
-    icon: "bx:bxl-wordpress",
+    imageUrl: "/images/project-wordpress.jpg",
   },
   {
     title: "Vue JS Development",
     description:
       "Proficient in Vue 3 with component-based architecture, Vuex/Pinia state management, and modern tooling like Vite and Vue Router.",
-    icon: "bx:bxl-vuejs",
+    imageUrl: "/images/project-vue.jpg",
   },
   {
     title: "Docker & Open Source",
     description:
       "Containerization expert with Docker and Kubernetes. Active contributor to open source projects with CI/CD pipeline implementation experience.",
-    icon: "bx:bxl-docker",
+    imageUrl: "/images/project-docker.jpg",
   },
 ];
 ---
@@ -60,7 +58,11 @@ const projects = [
           <!-- Header section with icon and title in a 1:2 grid -->
           <div class="grid grid-cols-3 md:grid-cols-1 gap-4 items-center mb-4">
             <div class="flex justify-center items-center bg-rose-flash dark:bg-custom-purple rounded-full p-2 w-16 h-16 shrink-0">
-              <Icon class="text-white dark:text-slate-300 text-4xl self-center" name={item.icon} />
+            <img 
+              src={item.imageUrl} 
+              alt={`${item.title} project`} 
+              class="w-full h-full object-cover"
+            />
             </div>
             <h3 class="font-semibold text-lg col-span-2">{item.title}</h3>
           </div>
