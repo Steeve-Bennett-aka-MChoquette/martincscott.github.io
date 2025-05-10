@@ -3,7 +3,7 @@
  */
 
 // WordPress API URLs for different sites
-const BLOG_API_URL = 'https://catapultecommunication.com/wp-json/wp/v2';
+const BLOG_API_URL = 'https://wpdb.martincscott.com/wp-json/wp/v2';
 const PROJECTS_API_URL = 'https://wpdb.martincscott.com/wp-json/wp/v2';
 
 // Types for WordPress content
