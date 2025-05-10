@@ -1,36 +1,48 @@
 ---
-// Project data with dates for consistent styling with BlogCard
-const projects = [
-  {
-    title: "Software Development",
-    description:
-      "Experienced in both functional and OOP paradigms across Dart, Python, Java, JavaScript, and TypeScript. Focused on clean architecture and scalable solutions.",
-    imageUrl: "https://cpamxepvma.cloudimg.io/minio-api.martincscott.com/mysite/martincscott-com/spaceship.jpg",
-    date: "2025-03-20T00:00:00",
-  },
-  {
-    title: "Flutter Development",
-    description:
-      "Skilled in building cross-platform mobile applications for Android and iOS using Flutter framework with native performance and responsive design.",
-    imageUrl: "https://cpamxepvma.cloudimg.io/minio-api.martincscott.com/mysite/martincscott-com/purple_road_2.jpg",
-    date: "2025-03-15T00:00:00",
-  },
-  {
-    title: "Frontend Development",
-    description:
-      "React/NextJS expert with 5+ years of experience. Passionionate about UI/UX design and modern web standards using HTML, CSS, and JavaScript frameworks.",
-    imageUrl: "https://cpamxepvma.cloudimg.io/minio-api.martincscott.com/mysite/martincscott-com/Galaxy.jpg",
-    date: "2025-03-10T00:00:00",
-  },
-];
+import { getAllProjects } from "../lib/wordpress";
+
+// Fetch projects from WordPress API with error handling
+let projects = [];
+try {
+  projects = await getAllProjects(1, 3); // Fetch first 3 projects
+} catch (error) {
+  console.error("Error fetching projects");
+}
 
 // Format date similar to BlogCard component
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  try {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    return "No date available";
+  }
+}
+
+// Helper function to safely get content snippet
+function getContentSnippet(project) {
+  // Simple approach - directly access ACF content field
+  if (project?.acf?.content) {
+    try {
+      return project.acf.content.substring(0, 150) + '...';
+    } catch (error) {
+      // Silent error handling for production
+    }
+  }
+  
+  // Fallback to WordPress excerpt or content if ACF content is not available
+  if (project?.excerpt?.rendered) {
+    return project.excerpt.rendered.substring(0, 150) + '...';
+  }
+  
+  if (project?.content?.rendered) {
+    return project.content.rendered.substring(0, 150) + '...';
+  }
+  
+  return "No content available";
 }
 ---
 
@@ -45,37 +57,43 @@ function formatDate(dateString: string) {
 </div>
 
 <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-16 gap-12">
-  {
-    projects.map((item) => (
+  {projects.length === 0 ? (
+    <div class="col-span-3 text-center py-12">
+      <p>No projects available at the moment. Please check back later.</p>
+    </div>
+  ) : (
+    projects.map((project) => (
       <article class="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md transition hover:shadow-lg">
         <!-- Image section -->
-        <div class="aspect-video overflow-hidden">
-          <img 
-            src={item.imageUrl} 
-            alt={`${item.title} project`} 
-            class="w-full h-full object-cover"
-          />
-        </div>
+        {project?.acf?.image && (
+          <div class="aspect-video overflow-hidden">
+            <img 
+              src={project.acf.image} 
+              alt={project?.title?.rendered || "Project image"}
+              class="w-full h-full object-cover"
+            />
+          </div>
+        )}
         
         <!-- Content section -->
         <div class="p-6">
           <!-- Date -->
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-            {formatDate(item.date)}
+            {project?.date ? formatDate(project.date) : "No date available"}
           </p>
           
           <!-- Title -->
           <h3 class="text-xl font-bold mb-2 line-clamp-2">
-            {item.title}
+            {project?.title?.rendered || "Untitled Project"}
           </h3>
           
-          <!-- Description -->
-          <p class="text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
-            {item.description}
-          </p>
+          <!-- Description - Using a snippet of the content -->
+          <div class="text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
+            <div set:html={getContentSnippet(project)} />
+          </div>
           
           <!-- Read more link -->
-          <a href="#" class="text-rose-flash hover:underline inline-flex items-center">
+          <a href={project?.slug ? `/projects/${project.slug}` : "#"} class="text-rose-flash hover:underline inline-flex items-center">
             Read more
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -84,5 +102,5 @@ function formatDate(dateString: string) {
         </div>
       </article>
     ))
-  }
+  )}
 </div>
