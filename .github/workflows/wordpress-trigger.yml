@@ -3,6 +3,9 @@ name: WordPress Content Update
 on:
   repository_dispatch:
     types: [wordpress_update]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight
+
 
 env:
   PUBLIC_EMAILJS_KEY: ${{ secrets.PUBLIC_EMAILJS_KEY }}
