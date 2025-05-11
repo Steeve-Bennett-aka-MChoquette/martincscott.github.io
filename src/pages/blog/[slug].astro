@@ -30,7 +30,7 @@ function formatDate(dateString: string) {
 <MainLayout title={post.title.rendered}>
   <article class="py-16 px-4 max-w-4xl mx-auto">
     <header class="mb-16">
-      <h1 class="text-5xl md:text-6xl mb-8 font-bold leading-tight" set:html={post.title.rendered} />
+      <h1 class="text-3xl lg:text-4xl xl:text-5xl mb-8 font-bold leading-tight" set:html={post.title.rendered} />
       <p class="text-gray-500 dark:text-gray-400 text-xl mb-12">
         Published on {formatDate(post.date)}
       </p>

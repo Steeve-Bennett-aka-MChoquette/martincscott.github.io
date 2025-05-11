@@ -61,7 +61,7 @@ function getContent(project) {
 <MainLayout title={project?.title?.rendered || "Project Details"}>
   <article class="py-16 px-4 max-w-4xl mx-auto">
     <header class="mb-16">
-      <h1 class="text-5xl md:text-6xl mb-8 font-bold leading-tight" set:html={project?.title?.rendered || "Project Details"} />
+      <h1 class="text-3xl lg:text-4xl xl:text-5xl mb-8 font-bold leading-tight" set:html={project?.title?.rendered || "Project Details"} />
       <p class="text-gray-500 dark:text-gray-400 text-xl mb-12">
         Published on {project?.date ? formatDate(project.date) : "No date available"}
       </p>
