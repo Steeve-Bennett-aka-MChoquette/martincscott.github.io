@@ -367,12 +367,12 @@ The blog post content has custom styling to ensure readability and consistent de
 }
 
 .blog-content :global(h2) {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 700;
 }
 
 .blog-content :global(h3) {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
 }
 
