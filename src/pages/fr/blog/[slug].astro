@@ -1,12 +1,14 @@
 ---
 import MainLayout from "../../../layouts/MainLayout.astro";
 import { getPostBySlug, getAllPosts } from "../../../lib/wordpress";
+import { loadTranslations } from "../../../utils/i18n";
 
 // Set current locale
 const currentLocale = 'fr';
 
 // Import translations
-const translations = await import(`../../../i18n/${currentLocale}.json`);
+const mainTranslations = await import(`../../../i18n/${currentLocale}.json`);
+const blogTranslations = await import(`../../../i18n/blog.json`);
 
 export async function getStaticPaths() {
   const posts = await getAllPosts(1, 100, currentLocale); // Fetch enough posts for static generation
@@ -38,7 +40,7 @@ function formatDate(dateString: string) {
     <header class="mb-16">
       <h1 class="text-3xl lg:text-4xl xl:text-5xl mb-8 font-bold leading-tight" set:html={post.title.rendered} />
       <p class="text-gray-500 dark:text-gray-400 text-xl mb-12">
-        {translations.default.blog.publishedOn} {formatDate(post.date)}
+        {mainTranslations.default.blog.publishedOn} {formatDate(post.date)}
       </p>
       
       {post._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
@@ -61,7 +63,7 @@ function formatDate(dateString: string) {
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        {translations.default.blog.backToAll}
+        {mainTranslations.default.blog.backToAll}
       </a>
     </div>
   </article>

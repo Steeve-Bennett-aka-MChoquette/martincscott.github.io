@@ -1,0 +1,18 @@
+{
+  "en": {
+    "title": "Blog",
+    "recentPosts": "Recent Posts",
+    "readMore": "Read More",
+    "postedOn": "Posted on",
+    "backToList": "Back to Blog List",
+    "publishedOn": "Published on"
+  },
+  "fr": {
+    "title": "Blog",
+    "recentPosts": "Articles Récents",
+    "readMore": "Lire la Suite",
+    "postedOn": "Publié le",
+    "backToList": "Retour à la Liste du Blog",
+    "publishedOn": "Publié le"
+  }
+}
