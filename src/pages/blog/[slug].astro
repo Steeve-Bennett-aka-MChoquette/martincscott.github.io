@@ -106,9 +106,7 @@ function formatDate(dateString: string) {
   .blog-content :global(li) {
     margin-bottom: 0.75em;
     line-height: 1.7;
-  }
-  .dark .blog-content :global(li) {
-    color: white;
+    @apply dark:text-gray-100;
   }
   
   .blog-content :global(img) {
