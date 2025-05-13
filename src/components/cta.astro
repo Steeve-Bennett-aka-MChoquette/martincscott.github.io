@@ -1,18 +1,32 @@
 ---
 import Link from "./ui/link.astro";
+
+// Get current locale from URL
+const { pathname } = Astro.url;
+const currentPathSegments = pathname.split('/').filter(Boolean);
+const currentLocale = currentPathSegments[0] || 'fr';
+
+// Import translations
+let translations;
+try {
+  translations = await import(`../i18n/${currentLocale}.json`);
+} catch (error) {
+  console.error(`Failed to load translations for ${currentLocale}`, error);
+  // Fallback to default locale
+  translations = await import(`../i18n/fr.json`);
+}
 ---
 
 <div class="gradient-border mx-auto max-w-5xl mt-24">
   <div class="flex flex-col feature-card bg-white dark:bg-deep-purple shadow-md rounded-lg p-6 items-center text-center dark-transition">
     <h2 class="text-black dark:text-white text-4xl md:text-6xl tracking-tight font-semibold mt-12">
-      Build faster websites.
+      {translations.default.cta.title}
     </h2>
     <p class="text-slate-950 dark:text-paragraph-dark mt-4 text-lg md:text-xl leading-relaxed">
-      Pull content from anywhere and serve it fast with Astro's next-gen island
-      architecture.
+      {translations.default.cta.subtitle}
     </p>
     <div class="mb-12 flex mt-8">
-      <Link href="#" style="outline">Get Started</Link>
+      <Link href={`/${currentLocale}/contact`} style="outline">{translations.default.cta.button}</Link>
     </div>
   </div>
 </div>

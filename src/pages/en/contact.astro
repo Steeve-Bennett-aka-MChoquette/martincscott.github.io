@@ -1,0 +1,62 @@
+---
+import ContactForm from "@components/sections/ContactForm.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { Icon } from "astro-icon/components";
+
+// Set current locale
+const currentLocale = 'en';
+
+// Import translations
+const translations = await import(`../../i18n/${currentLocale}.json`);
+---
+
+<MainLayout title={translations.default.contact.title}>
+ <Container>
+   <Sectionhead>
+     <Fragment slot="title">{translations.default.contact.title}</Fragment>
+     <Fragment slot="desc">Let's get in touch</Fragment>
+   </Sectionhead>
+
+   <div class="grid md:grid-cols-2 gap-10 mx-auto max-w-4xl mt-16">
+     <div>
+       <h2 class="font-medium text-2xl text-gray-800 dark:text-gray-100">Let's Collaborate</h2>
+       <p class="text-lg leading-relaxed text-slate-500 dark:text-stone-100 mt-3">
+         Ready to discuss your digital transformation project or need expert UX/UI guidance? Reach out through any of these channels to start the conversation.
+       </p>
+       <div class="mt-5">
+         <div class="flex items-center mt-2 space-x-2 text-slate-600 dark:text-stone-100">
+          <Icon class="text-gray-400 w-4 h-4" name="bx:bx-envelope" />
+           <a href="mailto:martin@martincscott.com" class="hover:text-gray-800 dark:hover:text-white">
+             martin@martincscott.com
+           </a>
+         </div>
+         <div class="flex items-center mt-2 space-x-2 text-slate-600 dark:text-stone-100">
+          <Icon class="text-gray-400 w-4 h-4" name="bx:bxl-github" />
+           <a 
+             href="https://github.com/Steeve-Bennett-aka-MChoquette" 
+             target="_blank"
+             rel="noopener"
+             class="hover:text-gray-800 dark:hover:text-white">
+             GitHub Profile
+           </a>
+         </div>
+         <div class="flex items-center mt-2 space-x-2 text-slate-600 dark:text-stone-100">
+          <Icon class="text-gray-400 w-4 h-4" name="bx:bxl-linkedin" />
+           <a 
+             href="https://www.linkedin.com/in/martin-choquette-scott/"
+             target="_blank"
+             rel="noopener"
+             class="hover:text-gray-800 dark:hover:text-white">
+             LinkedIn Profile
+           </a>
+         </div>
+       </div>
+     </div>
+     <div>
+       <ContactForm locale={currentLocale} />
+     </div>
+   </div>
+ </Container>
+</MainLayout>

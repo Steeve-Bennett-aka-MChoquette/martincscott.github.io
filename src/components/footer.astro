@@ -1,6 +1,23 @@
+---
+// Get current locale from URL
+const { pathname } = Astro.url;
+const currentPathSegments = pathname.split('/').filter(Boolean);
+const currentLocale = currentPathSegments[0] || 'fr';
+
+// Import translations
+let translations;
+try {
+  translations = await import(`../i18n/${currentLocale}.json`);
+} catch (error) {
+  console.error(`Failed to load translations for ${currentLocale}`, error);
+  // Fallback to default locale
+  translations = await import(`../i18n/fr.json`);
+}
+---
+
 <footer class="my-20 pb-12 bg-transparent">
   <p class="text-center text-sm text-slate-500">
-    Copyright © {new Date().getFullYear()} Martin C-Scott. All rights reserved.
+    Copyright © {new Date().getFullYear()} Martin C-Scott. {translations.default.footer.rights}
   </p>
 
   <p class="text-center text-xs text-slate-800 mt-1">

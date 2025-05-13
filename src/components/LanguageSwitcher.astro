@@ -1,0 +1,59 @@
+---
+// src/components/LanguageSwitcher.astro
+const { pathname } = Astro.url;
+const currentPathSegments = pathname.split('/').filter(Boolean);
+const currentLocale = currentPathSegments[0] || 'fr';
+
+// Function to get equivalent URL in another locale
+function getLocalizedPath(targetLocale: string) {
+  if (currentPathSegments.length === 0) {
+    return `/${targetLocale}/`;
+  }
+  
+  const newPathSegments = [...currentPathSegments];
+  newPathSegments[0] = targetLocale;
+  return '/' + newPathSegments.join('/');
+}
+---
+
+<div class="language-switcher">
+  <a href={getLocalizedPath('fr')} class={currentLocale === 'fr' ? 'active' : ''} aria-label="Passer en français">
+    FR
+  </a>
+  <span class="divider">|</span>
+  <a href={getLocalizedPath('en')} class={currentLocale === 'en' ? 'active' : ''} aria-label="Switch to English">
+    EN
+  </a>
+</div>
+
+<style>
+  .language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .language-switcher a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    @apply text-gray-700 dark:text-gray-200;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+  }
+  
+  .language-switcher a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .language-switcher a.active {
+    font-weight: 700;
+    color: var(--rose-flash, #D45CFE);
+  }
+  
+  .divider {
+    @apply text-gray-700 dark:text-gray-200;
+  }
+  
+</style>

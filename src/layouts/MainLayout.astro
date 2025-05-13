@@ -5,6 +5,20 @@ import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
 import "@fontsource-variable/inter/index.css";
 
+// Import translations based on current path
+const { pathname } = Astro.url;
+const currentPathSegments = pathname.split('/').filter(Boolean);
+const currentLocale = currentPathSegments[0] || 'fr';
+
+// Import the appropriate translation file
+let translations;
+try {
+  translations = await import(`../i18n/${currentLocale}.json`);
+} catch (error) {
+  console.error(`Failed to load translations for ${currentLocale}`, error);
+  // Fallback to default locale
+  translations = await import(`../i18n/fr.json`);
+}
 
 export interface Props {
   title: string;
@@ -18,12 +32,12 @@ const resolvedImageWithDomain = new URL(
 
 const { title } = Astro.props;
 const makeTitle = title
-  ? title + " | " + "Martin Choquette Scott"
-  : "Dev Web";
+  ? title + " | " + translations.default.site.title
+  : translations.default.site.title;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={currentLocale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -37,7 +51,7 @@ const makeTitle = title
 <body class="bg-slate-100 dark:bg-deep-purple">
     <div class="bg-transparent">
       <div class="bg-transparent"></div>
-      <Navbar />
+      <Navbar currentLocale={currentLocale} />
         <slot />
       <Footer />
     </div>

@@ -1,0 +1,100 @@
+---
+import { Picture } from "astro:assets";
+import profileImage from "../../assets/profile-martin.webp";
+import Layout from "../../layouts/MainLayout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+
+// Set current locale
+const currentLocale = 'en';
+
+// Import translations
+const translations = await import(`../../i18n/${currentLocale}.json`);
+
+// Define your skills/technologies
+const skills = [
+  {
+    name: "UX/UI Design",
+    description: "Creating intuitive user experiences and modern interface designs",
+    icon: "🎨"
+  },
+  {
+    name: "Digital Transformation",
+    description: "Helping startups and enterprises evolve through innovative technology solutions",
+    icon: "🚀"
+  },
+  {
+    name: "Startup Advisory",
+    description: "Advisor and partner to digital and fintech startups",
+    icon: "💡"
+  }
+];
+---
+
+<Layout title={translations.default.about.title}>
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">{translations.default.about.title}</Fragment>
+      <Fragment slot="desc">Software Developer & Technical Writer</Fragment>
+    </Sectionhead>
+
+    <div class="flex flex-col md:flex-row gap-10 mx-auto max-w-4xl mt-16">
+      <div class="flex-1">
+        <div class="w-full max-w-md">
+          <Picture
+            src={profileImage}
+            alt="Martin Scott"
+            sizes="(max-width: 800px) 100vw, 400px"
+            width={600}
+            height={800}
+            class="w-full rounded-md transition shadow-lg dark:bg-semi-deep-purple border-2 border-rose-flash object-cover object-center"
+          />
+        </div>
+      </div>
+      
+      <div class="flex-1 flex flex-col items-center justify-center">
+        <h2 class="font-bold text-3xl text-gray-800 dark:text-gray-100">
+          Hi, I'm Martin Choquette-Scott
+        </h2>
+        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3">
+          As a UX/UI specialist and digital innovator, I help startups and enterprises create exceptional digital products. With a background in political science and e-business, I combine technical expertise with strategic thinking to deliver solutions that transform businesses.
+        </p>
+        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3">
+          I work with companies, agencies, and startups to develop digital strategies, implement cutting-edge technologies, and serve as a trusted advisor in the fintech space. My approach focuses on user-centered design and measurable business outcomes.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12">
+      {skills.map((skill) => (
+        <div class="group p-5 rounded-lg shadow-xl dark:bg-semi-deep-purple border border-rose-flash transition hover:shadow-lg">
+          <div class="text-4xl mb-4">{skill.icon}</div>
+          <h3 class="text-lg font-medium text-gray-800 dark:text-gray-100">
+            {skill.name}
+          </h3>
+          <p class="text-slate-500 dark:text-slate-400 mt-2">
+            {skill.description}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mx-auto max-w-4xl mt-16 text-center">
+        <h2 class="font-bold text-3xl text-gray-800 dark:text-gray-100 mb-8">
+          Ready to Transform Your Digital Vision into Reality?
+        </h2>
+      <div class="flex gap-4 justify-center">
+        <a
+          href={`/${currentLocale}/contact`}
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:bg-rose-flash dark:hover:bg-opacity-90">
+          Get in Touch
+        </a>
+        <a
+          href={`/${currentLocale}/projects`}
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-gray-800 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:text-white dark:bg-semi-deep-purple dark:hover:bg-opacity-90">
+          View Projects
+        </a>
+      </div>
+    </div>
+  </Container>
+</Layout>

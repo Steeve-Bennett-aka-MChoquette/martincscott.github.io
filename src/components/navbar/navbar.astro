@@ -2,34 +2,42 @@
 import Container from "@components/container.astro";
 import Link from "@components/ui/link.astro";
 import Dropdown from "./dropdown.astro";
+import LanguageSwitcher from "../LanguageSwitcher.astro";
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
+
+// Accept currentLocale as a prop
+interface Props {
+  currentLocale: string;
+}
+
+const { currentLocale = 'fr' } = Astro.props;
+
+// Import translations
+let translations;
+try {
+  translations = await import(`../../i18n/${currentLocale}.json`);
+} catch (error) {
+  console.error(`Failed to load translations for ${currentLocale}`, error);
+  // Fallback to default locale
+  translations = await import(`../../i18n/fr.json`);
+}
 
 const menuitems = [
   {
-    title: "Features",
-    path: "#",
-    children: [
-      { title: "Action", path: "/" },
-      { title: "Another action", path: "#" },
-      { title: "Dropdown Submenu", path: "#" },
-      { title: "404 Page", path: "/404" },
-    ],
+    title: translations.default.nav.about,
+    path: `/${currentLocale}/about`,
   },
   {
-    title: "About",
-    path: "/about",
+    title: translations.default.nav.projects,
+    path: `/${currentLocale}/projects`,
   },
   {
-    title: "Projects",
-    path: "/projects",
+    title: translations.default.nav.blog,
+    path: `/${currentLocale}/blog`,
   },
   {
-    title: "Blog",
-    path: "/blog",
-  },
-  {
-    title: "Contact",
-    path: "/contact",
+    title: translations.default.nav.contact,
+    path: `/${currentLocale}/contact`,
   },
   {
     title: "Portfolio",
@@ -45,7 +53,7 @@ const menuitems = [
     <Astronav aria-label="Main navigation">
       <div class="flex items-center justify-between">
         <!-- Logo -->
-        <a href="/" class="text-lg flex-shrink-0">
+        <a href={`/${currentLocale}/`} class="text-lg flex-shrink-0">
           <span class="font-bold text-pink-500">Martin</span>
           <span class="font-bold dark:text-neutral-100 text-neutral-700">C_Scott</span>
         </a>
@@ -56,30 +64,20 @@ const menuitems = [
             <ul class="flex items-center gap-6">
               {
                 menuitems.map((item, index) => (
-                  <>
-                    {item.children && (
-                      <Dropdown
-                        title={item.title}
-                        children={item.children}
-                        lastItem={index === menuitems.length - 1}
-                      />
-                    )}
-                    {!item.children && (
-                      <li>
-                        <a 
-                          href={item.path} 
-                          class="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900 uppercase"
-                        >
-                          {item.title}
-                          {item.badge && (
-                            <span class="ml-1 px-2 py-0.5 text-[10px] font-semibold uppercase text-white bg-purple-600 rounded-full">
-                              NEW
-                            </span>
-                          )}
-                        </a>
-                      </li>
-                    )}
-                  </>
+                  <li>
+                    <a 
+                      href={item.path} 
+                      target={item.target}
+                      class="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900 uppercase"
+                    >
+                      {item.title}
+                      {item.badge && (
+                        <span class="ml-1 px-2 py-0.5 text-[10px] font-semibold uppercase text-white bg-purple-600 rounded-full">
+                          NEW
+                        </span>
+                      )}
+                    </a>
+                  </li>
                 ))
               }
             </ul>
@@ -87,25 +85,28 @@ const menuitems = [
         </div>
 
         <div class="flex items-center gap-4">
+          <!-- Desktop Login/Signup -->
+          <div class="hidden lg:flex items-center gap-4">
+            <a href={`/${currentLocale}/auth/login`} class="text-gray-600 dark:text-gray-200 hover:text-gray-900">Log in</a>
+            <Link href={`/${currentLocale}/auth/signup`} size="md">Sign up</Link>
+          </div>
+
+          <!-- Language Switcher -->
+          <LanguageSwitcher />
+          
           <!-- Dark mode toggle -->
           <button 
             data-switch-theme 
             class="outline-none flex relative text-heading-2 rounded-full p-2 border border-black dark:border-white border-box-border"
           >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" class="w-6 h-6 dark:flex hidden">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark:hidden">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-          </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" class="w-6 h-6 dark:flex hidden">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark:hidden">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+            </svg>
             <span class="sr-only">switch theme</span>
           </button>
-
-          <!-- Desktop Login/Signup -->
-          <div class="hidden lg:flex items-center gap-4">
-          <a href="/auth/login" class="text-gray-600 dark:text-gray-200 hover:text-gray-900">Log in</a>
-          <Link href="/auth/signup" size="md">Sign up</Link>
-          </div>
 
           <!-- Menu Icon -->
           <div class="block lg:hidden">
@@ -120,37 +121,48 @@ const menuitems = [
     <ul class="flex flex-col gap-4">
       {
         menuitems.map((item, index) => (
-          <>
-            {item.children && (
-              <Dropdown
-                title={item.title}
-                children={item.children}
-                lastItem={index === menuitems.length - 1}
-              />
-            )}
-            {!item.children && (
-              <li>
-                <a 
-                  href={item.path} 
-                  class="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900 uppercase"
-                >
-                  {item.title}
-                  {item.badge && (
-                    <span class="ml-1 px-2 py-0.5 text-[10px] font-semibold uppercase text-white bg-purple-600 rounded-full">
-                      NEW
-                    </span>
-                  )}
-                </a>
-              </li>
-            )}
-          </>
+          <li>
+            <a 
+              href={item.path} 
+              target={item.target}
+              class="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900 uppercase"
+            >
+              {item.title}
+              {item.badge && (
+                <span class="ml-1 px-2 py-0.5 text-[10px] font-semibold uppercase text-white bg-purple-600 rounded-full">
+                  NEW
+                </span>
+              )}
+            </a>
+          </li>
         ))
       }
     </ul>
 
     <div class="flex flex-col gap-4 mt-4">
-  <Link href="/auth/login" style="outline" block size="md">Log in</Link>
-      <Link href="/auth/signup" style="primary" size="md" block>Sign up</Link>
+      <Link href={`/${currentLocale}/auth/login`} style="outline" block size="md">Log in</Link>
+      <Link href={`/${currentLocale}/auth/signup`} style="primary" size="md" block>Sign up</Link>
+      
+      <!-- Mobile Language Switcher -->
+      <div class="flex justify-center mt-4">
+        <LanguageSwitcher />
+      </div>
+      
+      <!-- Mobile Dark Mode Toggle -->
+      <div class="flex justify-center mt-2">
+        <button 
+          data-switch-theme 
+          class="outline-none flex relative text-heading-2 rounded-full p-2 border border-black dark:border-white border-box-border"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" class="w-6 h-6 dark:flex hidden">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark:hidden">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+          </svg>
+          <span class="sr-only">switch theme</span>
+        </button>
+      </div>
     </div>
   </div>
   </MenuItems>

@@ -1,0 +1,100 @@
+---
+import { Picture } from "astro:assets";
+import profileImage from "../../assets/profile-martin.webp";
+import Layout from "../../layouts/MainLayout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+
+// Set current locale
+const currentLocale = 'fr';
+
+// Import translations
+const translations = await import(`../../i18n/${currentLocale}.json`);
+
+// Define your skills/technologies
+const skills = [
+  {
+    name: "UX/UI Design",
+    description: "Création d'expériences utilisateur intuitives et de designs d'interface modernes",
+    icon: "🎨"
+  },
+  {
+    name: "Transformation Digitale",
+    description: "Aider les startups et les entreprises à évoluer grâce à des solutions technologiques innovantes",
+    icon: "🚀"
+  },
+  {
+    name: "Conseil aux Startups",
+    description: "Conseiller et partenaire pour les startups digitales et fintech",
+    icon: "💡"
+  }
+];
+---
+
+<Layout title={translations.default.about.title}>
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">{translations.default.about.title}</Fragment>
+      <Fragment slot="desc">Développeur Logiciel & Rédacteur Technique</Fragment>
+    </Sectionhead>
+
+    <div class="flex flex-col md:flex-row gap-10 mx-auto max-w-4xl mt-16">
+      <div class="flex-1">
+        <div class="w-full max-w-md">
+          <Picture
+            src={profileImage}
+            alt="Martin Scott"
+            sizes="(max-width: 800px) 100vw, 400px"
+            width={600}
+            height={800}
+            class="w-full rounded-md transition shadow-lg dark:bg-semi-deep-purple border-2 border-rose-flash object-cover object-center"
+          />
+        </div>
+      </div>
+      
+      <div class="flex-1 flex flex-col items-center justify-center">
+        <h2 class="font-bold text-3xl text-gray-800 dark:text-gray-100">
+          Bonjour, je suis Martin Choquette-Scott
+        </h2>
+        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3">
+          En tant que spécialiste UX/UI et innovateur numérique, j'aide les startups et les entreprises à créer des produits numériques exceptionnels. Avec une formation en sciences politiques et en e-business, je combine expertise technique et réflexion stratégique pour fournir des solutions qui transforment les entreprises.
+        </p>
+        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3">
+          Je travaille avec des entreprises, des agences et des startups pour développer des stratégies numériques, mettre en œuvre des technologies de pointe et servir de conseiller de confiance dans le domaine de la fintech. Mon approche se concentre sur la conception centrée sur l'utilisateur et des résultats commerciaux mesurables.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12">
+      {skills.map((skill) => (
+        <div class="group p-5 rounded-lg shadow-xl dark:bg-semi-deep-purple border border-rose-flash transition hover:shadow-lg">
+          <div class="text-4xl mb-4">{skill.icon}</div>
+          <h3 class="text-lg font-medium text-gray-800 dark:text-gray-100">
+            {skill.name}
+          </h3>
+          <p class="text-slate-500 dark:text-slate-400 mt-2">
+            {skill.description}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mx-auto max-w-4xl mt-16 text-center">
+        <h2 class="font-bold text-3xl text-gray-800 dark:text-gray-100 mb-8">
+          Prêt à transformer votre vision numérique en réalité ?
+        </h2>
+      <div class="flex gap-4 justify-center">
+        <a
+          href={`/${currentLocale}/contact`}
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:bg-rose-flash dark:hover:bg-opacity-90">
+          Me contacter
+        </a>
+        <a
+          href={`/${currentLocale}/projects`}
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-gray-800 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:text-white dark:bg-semi-deep-purple dark:hover:bg-opacity-90">
+          Voir les projets
+        </a>
+      </div>
+    </div>
+  </Container>
+</Layout>

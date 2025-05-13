@@ -9,6 +9,13 @@ export default defineConfig({
   build: {
     assets: '_assets'
   },
+  i18n: {
+    defaultLocale: 'fr',  // Set French as default
+    locales: ['fr', 'en'],
+    routing: {
+      prefixDefaultLocale: true  // This will create /fr/ and /en/ routes
+    }
+  },
   integrations: [
     tailwind(),
     icon({ 

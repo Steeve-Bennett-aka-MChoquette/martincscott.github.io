@@ -1,0 +1,67 @@
+{
+  "site": {
+    "title": "Martin C Scott",
+    "description": "Crafting exceptional digital experiences through UX/UI innovation"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "blog": "Blog",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Crafting exceptional digital experiences through UX/UI innovation",
+    "subtitle": "Leveraging cutting-edge technologies to create intuitive digital products for startups, enterprises, and digital agencies worldwide. Expert in transforming complex challenges into elegant, user-centered solutions."
+  },
+  "features": {
+    "title": "Features",
+    "subtitle": "Everything you need to create your website"
+  },
+  "cta": {
+    "title": "Let's build something together",
+    "subtitle": "Ready to transform your vision into digital reality?",
+    "button": "Contact me",
+    "download": "Download for free",
+    "github": "GitHub repo"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Read more",
+    "publishedOn": "Published on",
+    "backToAll": "Back to all posts"
+  },
+  "projects": {
+    "title": "Projects",
+    "viewProject": "View project",
+    "backToAll": "Back to all projects"
+  },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "contact": {
+    "title": "Contact me",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
+    "success": "Your message has been sent successfully!",
+    "error": "An error occurred. Please try again."
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Learn more about me and my work"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for doesn't exist or has been moved.",
+    "button": "Back to home"
+  }
+}

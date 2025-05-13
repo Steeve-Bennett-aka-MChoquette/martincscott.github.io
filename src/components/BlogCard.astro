@@ -3,17 +3,24 @@ import { type WordPressPost } from "../lib/wordpress";
 
 interface Props {
   post: WordPressPost;
+  locale?: string;
 }
 
-const { post } = Astro.props;
+const { post, locale = 'fr' } = Astro.props;
+
+// Import translations
+const translations = await import(`../i18n/${locale}.json`);
 
 // Format date
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  return new Date(dateString).toLocaleDateString(
+    locale === 'fr' ? 'fr-FR' : 'en-US', 
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+  );
 }
 ---
 
@@ -32,15 +39,15 @@ function formatDate(dateString: string) {
       {formatDate(post.date)}
     </p>
     <h2 class="text-xl font-bold mb-2 line-clamp-2">
-      <a href={`/blog/${post.slug}`} class="hover:text-rose-flash">
+      <a href={`/${locale}/blog/${post.slug}`} class="hover:text-rose-flash">
         {post.title.rendered}
       </a>
     </h2>
     <div class="prose-sm dark:prose-invert line-clamp-3 mb-4"
       set:html={post.excerpt.rendered} 
     />
-    <a href={`/blog/${post.slug}`} class="text-rose-flash hover:underline inline-flex items-center">
-      Read more
+    <a href={`/${locale}/blog/${post.slug}`} class="text-rose-flash hover:underline inline-flex items-center">
+      {translations.default.blog.readMore}
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
