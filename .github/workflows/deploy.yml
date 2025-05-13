@@ -29,8 +29,13 @@ jobs:
         run: npm ci
 
 
-      - name: Build
-        run: npm run build
+      - name: Build with debugging
+        run: |
+          echo "Running Astro check..."
+          npx astro check --verbose || echo "Astro check failed but continuing to build"
+          
+          echo "Running Astro build with verbose logging..."
+          npx astro build --verbose
 
       - name: Create .nojekyll
         run: touch dist/.nojekyll

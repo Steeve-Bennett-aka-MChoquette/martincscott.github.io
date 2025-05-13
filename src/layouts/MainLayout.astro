@@ -36,6 +36,18 @@ const makeTitle = title
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <SEO
+      title={makeTitle}
+      description={translations.site.description || ""}
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          title: makeTitle,
+          type: "website",
+          image: resolvedImageWithDomain,
+        }
+      }}
+    />
     <style is:global>
       @import "../styles/utilities.css";
       @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');

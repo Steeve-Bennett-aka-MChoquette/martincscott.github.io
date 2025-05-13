@@ -43,14 +43,16 @@ const skills = [
     <div class="flex flex-col md:flex-row gap-10 mx-auto max-w-4xl mt-16">
       <div class="flex-1">
         <div class="w-full max-w-md">
-          <Picture
-            src={profileImage}
-            alt="Martin Scott"
-            sizes="(max-width: 800px) 100vw, 400px"
-            width={600}
-            height={800}
-            class="w-full rounded-md transition shadow-lg dark:bg-semi-deep-purple border-2 border-rose-flash object-cover object-center"
-          />
+          {profileImage && (
+            <Picture
+              src={profileImage}
+              alt="Martin Scott"
+              sizes="(max-width: 800px) 100vw, 400px"
+              width={600}
+              height={800}
+              class="w-full rounded-md transition shadow-lg dark:bg-semi-deep-purple border-2 border-rose-flash object-cover object-center"
+            />
+          )}
         </div>
       </div>
       

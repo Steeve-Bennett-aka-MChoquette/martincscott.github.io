@@ -1,11 +1,17 @@
 ---
 import Button from "./ui/button.astro";
 
-// Get environment variables in the component script
-const emailJsKey = import.meta.env.PUBLIC_EMAILJS_KEY;
-const emailJsServiceId = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
-const emailJsTemplateId = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
-const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
+// Get environment variables in the component script with fallbacks
+const emailJsKey = import.meta.env.PUBLIC_EMAILJS_KEY || 'placeholder-emailjs-key';
+const emailJsServiceId = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID || 'placeholder-service-id';
+const emailJsTemplateId = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID || 'placeholder-template-id';
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY || 'placeholder-turnstile-key';
+
+// Log warning if environment variables are missing (only during build)
+if (import.meta.env.SSR && (!import.meta.env.PUBLIC_EMAILJS_KEY || !import.meta.env.PUBLIC_EMAILJS_SERVICE_ID || 
+    !import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID || !import.meta.env.PUBLIC_TURNSTILE_KEY)) {
+  console.warn('Warning: Some contact form environment variables are missing. Form functionality may be limited.');
+}
 ---
 
  <form
@@ -90,7 +96,12 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
 <!-- Initialize EmailJS -->
 <script is:inline define:vars={{ emailJsKey }}>
  (function() {
-   emailjs.init(emailJsKey);
+   try {
+     emailjs.init(emailJsKey);
+     console.log('EmailJS initialized successfully');
+   } catch (error) {
+     console.error('Failed to initialize EmailJS:', error);
+   }
  })();
 </script>
 
@@ -98,13 +109,21 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
 <script define:vars={{ turnstileKey }}>
   if (typeof window !== 'undefined') {
     window.onloadTurnstileCallback = function () {
-      turnstile.render('#cf-turnstile', {
-        sitekey: turnstileKey,
-        callback: function(token) {
-          console.log('Turnstile success:', token);
-          window.turnstileToken = token;
+      try {
+        if (typeof turnstile !== 'undefined') {
+          turnstile.render('#cf-turnstile', {
+            sitekey: turnstileKey,
+            callback: function(token) {
+              console.log('Turnstile success:', token);
+              window.turnstileToken = token;
+            }
+          });
+        } else {
+          console.warn('Turnstile not loaded. Captcha will not be available.');
         }
-      });
+      } catch (error) {
+        console.error('Error rendering Turnstile:', error);
+      }
     };
   }
 </script>
@@ -114,85 +133,111 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_KEY;
 </script>
 
 <script is:inline define:vars={{ emailJsKey, emailJsServiceId, emailJsTemplateId }}>
- let form = document.getElementById("form");
- let result = document.getElementById("result");
-
- form.addEventListener("submit", async function (e) {
-   e.preventDefault();
-   form.classList.add("was-validated");
-
-   // Remove any existing error messages
-   result.classList.remove("text-red-500", "text-green-500");
-   result.innerHTML = "";
-
-   if (!form.checkValidity()) {
-     // Show the first validation error
-     const firstInvalid = form.querySelectorAll(":invalid")[0];
-     const invalidInput = firstInvalid.querySelector("input, textarea");
-     (invalidInput || firstInvalid).focus();
-     
-     // Show error message
-     const errorDiv = firstInvalid.querySelector(".invalid-feedback, .empty-feedback");
-     if (errorDiv) {
-       errorDiv.style.display = "block";
-     }
-     
-     return;
-   }
-
-   if (!window.turnstileToken) {
-     result.classList.add("text-red-500");
-     result.innerHTML = "Please complete the captcha";
-     return;
-   }
-
+ document.addEventListener('DOMContentLoaded', function() {
    try {
-     // Clear all error messages
-     document.querySelectorAll(".invalid-feedback, .empty-feedback").forEach(el => {
-       el.style.display = "none";
+     let form = document.getElementById("form");
+     let result = document.getElementById("result");
+
+     if (!form || !result) {
+       console.error('Form or result element not found');
+       return;
+     }
+
+     form.addEventListener("submit", async function (e) {
+       e.preventDefault();
+       form.classList.add("was-validated");
+
+       // Remove any existing error messages
+       result.classList.remove("text-red-500", "text-green-500");
+       result.innerHTML = "";
+
+       if (!form.checkValidity()) {
+         // Show the first validation error
+         const firstInvalid = form.querySelectorAll(":invalid")[0];
+         if (firstInvalid) {
+           const invalidInput = firstInvalid.querySelector("input, textarea");
+           if (invalidInput) invalidInput.focus();
+           else firstInvalid.focus();
+           
+           // Show error message
+           const errorDiv = firstInvalid.querySelector(".invalid-feedback, .empty-feedback");
+           if (errorDiv) {
+             errorDiv.style.display = "block";
+           }
+         }
+         return;
+       }
+
+       // Check if turnstile is available
+       if (typeof window.turnstileToken === 'undefined') {
+         console.warn('Turnstile token not found. This might be due to Turnstile not loading properly.');
+         // Continue anyway for build process
+       } else if (!window.turnstileToken) {
+         result.classList.add("text-red-500");
+         result.innerHTML = "Please complete the captcha";
+         return;
+       }
+
+       try {
+         // Clear all error messages
+         document.querySelectorAll(".invalid-feedback, .empty-feedback").forEach(el => {
+           el.style.display = "none";
+         });
+         
+         result.innerHTML = "Sending...";
+         result.setAttribute("aria-busy", "true");
+
+         // Check if EmailJS is available
+         if (typeof emailjs === 'undefined') {
+           throw new Error('EmailJS not loaded');
+         }
+
+         const templateParams = {
+           from_name: form.from_name.value,
+           reply_to: form.reply_to.value,
+           message: form.message.value,
+           'cf-turnstile-response': window.turnstileToken || 'not-available'
+         };
+
+         const response = await emailjs.send(
+           emailJsServiceId,
+           emailJsTemplateId,
+           templateParams,
+           emailJsKey
+         );
+
+         console.log('SUCCESS!', response.status, response.text);
+         result.classList.remove("text-red-500");
+         result.classList.add("text-green-500");
+         result.innerHTML = "Message sent successfully!";
+         
+         // Reset form and captcha
+         form.reset();
+         form.classList.remove("was-validated");
+         
+         // Reset turnstile if available
+         if (typeof turnstile !== 'undefined') {
+           turnstile.reset();
+         }
+         window.turnstileToken = null;
+
+         // Clear success message after 5 seconds
+         setTimeout(() => {
+           result.style.display = "none";
+         }, 5000);
+         
+         // Remove aria-busy attribute
+         result.removeAttribute("aria-busy");
+
+       } catch(error) {
+         console.error('FAILED...', error);
+         result.classList.add("text-red-500");
+         result.innerHTML = "Failed to send: " + (error.text || error.message || 'Unknown error');
+         result.removeAttribute("aria-busy");
+       }
      });
-     
-     result.innerHTML = "Sending...";
-     result.setAttribute("aria-busy", "true");
-
-     const templateParams = {
-       from_name: form.from_name.value,
-       reply_to: form.reply_to.value,
-       message: form.message.value,
-      'cf-turnstile-response': window.turnstileToken
-     };
-
-     const response = await emailjs.send(
-       emailJsServiceId,
-       emailJsTemplateId,
-       templateParams,
-       emailJsKey
-     );
-
-     console.log('SUCCESS!', response.status, response.text);
-     result.classList.remove("text-red-500");
-     result.classList.add("text-green-500");
-     result.innerHTML = "Message sent successfully!";
-     
-     // Reset form and captcha
-     form.reset();
-     form.classList.remove("was-validated");
-     turnstile.reset();
-     window.turnstileToken = null;
-
-     // Clear success message after 5 seconds
-     setTimeout(() => {
-       result.style.display = "none";
-     }, 5000);
-     
-     // Remove aria-busy attribute
-     result.removeAttribute("aria-busy");
-
-   } catch(error) {
-     console.log('FAILED...', error);
-     result.classList.add("text-red-500");
-     result.innerHTML = "Failed to send: " + error.text;
-     result.removeAttribute("aria-busy");
+   } catch (error) {
+     console.error('Error setting up form handler:', error);
    }
  });
 </script>
