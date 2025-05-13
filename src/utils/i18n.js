@@ -20,16 +20,31 @@ export function getLocaleFromPath(path) {
 
 /**
  * Load translations from a namespace
- * @param {string} namespace - The translation namespace (file name without extension)
+ * @param {string} namespace - The translation namespace (section name in the main translation file)
  * @param {string} locale - The locale to load translations for
  * @returns {object} - The translations object
  */
 export async function loadTranslations(namespace, locale = 'fr') {
   try {
-    const translations = await import(`../i18n/${namespace}.json`);
-    return translations[locale] || translations.fr;
+    // Load the main translation file for the specified locale
+    const translations = await import(`../i18n/${locale}.json`);
+    
+    // If namespace is specified, return that section, otherwise return the whole file
+    if (namespace && translations.default && translations.default[namespace]) {
+      return translations.default[namespace];
+    }
+    
+    return translations.default;
   } catch (error) {
-    console.error(`Failed to load translations for ${namespace}`, error);
-    return {};
+    console.error(`Failed to load translations for ${locale}/${namespace}`, error);
+    
+    // Fallback to specific translation file if it exists
+    try {
+      const specificTranslations = await import(`../i18n/${namespace}.json`);
+      return specificTranslations[locale] || specificTranslations.fr;
+    } catch (specificError) {
+      console.error(`Failed to load specific translations for ${namespace}`, specificError);
+      return {};
+    }
   }
 }

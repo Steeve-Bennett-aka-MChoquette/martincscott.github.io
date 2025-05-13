@@ -74,7 +74,7 @@ export const title = translations.login;
       const password = (document.getElementById('password') as HTMLInputElement).value;
       
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password
         });

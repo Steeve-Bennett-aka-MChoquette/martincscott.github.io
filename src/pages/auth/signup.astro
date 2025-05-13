@@ -2,22 +2,30 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Link from "@components/ui/link.astro";
 import { Icon } from "astro-icon/components";
-export const title = "Sign Up";
+import { getLocaleFromPath, loadTranslations } from "../../utils/i18n";
+
+// Get locale from URL or use default
+const currentLocale = getLocaleFromPath(Astro.url.pathname) || 'fr';
+
+// Load translations
+const translations = await loadTranslations('auth', currentLocale);
+
+export const title = translations.signup;
 ---
 
 <MainLayout title={title}>
   <div class="auth-container">
-    <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Create Your Professional Account</h1>
+    <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{translations.createAccount}</h1>
     
     <form id="signup-form" class="space-y-4">
       <div class="form-group">
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.email}</label>
         <input type="email" id="email" name="email" required 
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       </div>
       
       <div class="form-group">
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+        <label for="password" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.password}</label>
         <input type="password" id="password" name="password" required
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         <p class="help-text text-sm mt-1 text-gray-500 dark:text-gray-400">Password must be at least 6 characters long</p>
@@ -25,17 +33,17 @@ export const title = "Sign Up";
       
         <button type="submit" id="signup-button"
         class="w-full rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-5 py-2.5 bg-black text-white hover:bg-gray-800 border-2 border-transparent dark:bg-white dark:text-black dark:hover:bg-gray-200 dark:text-white flex items-center justify-center">
-        <span>Create Professional Account</span>
+        <span>{translations.createAccount}</span>
       </button>
       
         <p class="auth-link text-gray-700 dark:text-gray-300 text-center text-sm">
-        Already have an account? 
-        <a href="/auth/login" class="text-blue-500 hover:underline dark:text-blue-400 ml-1">Sign In</a>
+        {currentLocale === 'fr' ? 'Vous avez déjà un compte?' : 'Already have an account?'} 
+        <a href="/auth/login" class="text-blue-500 hover:underline dark:text-blue-400 ml-1">{translations.login}</a>
       </p>
     </form>
 
     <div class="social-login mt-6 text-center">
-        <h2 class="mb-3 text-base font-medium text-gray-700 dark:text-gray-300">Or create account with</h2>
+        <h2 class="mb-3 text-base font-medium text-gray-700 dark:text-gray-300">{translations.orLoginWith}</h2>
       <div class="flex justify-center space-x-2">
         <button id="github-signup" 
           class="m-1 rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-4 py-2 bg-white border-2 border-black hover:bg-gray-100 text-black dark:bg-black dark:border-white dark:hover:bg-gray-800 dark:text-white flex items-center">
@@ -63,7 +71,7 @@ export const title = "Sign Up";
       const password = (document.getElementById('password') as HTMLInputElement).value;
       
       try {
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email,
           password
         });

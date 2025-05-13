@@ -5,11 +5,13 @@ import Layout from "../../layouts/MainLayout.astro";
 import Container from "@components/container.astro";
 import Sectionhead from "@components/sectionhead.astro";
 
+import { loadTranslations } from "../../utils/i18n";
+
 // Set current locale
 const currentLocale = 'en';
 
-// Import translations
-const translations = await import(`../../i18n/${currentLocale}.json`);
+// Load translations
+const translations = await loadTranslations('about', currentLocale);
 
 // Define your skills/technologies
 const skills = [
@@ -31,10 +33,10 @@ const skills = [
 ];
 ---
 
-<Layout title={translations.default.about.title}>
+<Layout title={translations.title}>
   <Container>
     <Sectionhead>
-      <Fragment slot="title">{translations.default.about.title}</Fragment>
+      <Fragment slot="title">{translations.title}</Fragment>
       <Fragment slot="desc">Software Developer & Technical Writer</Fragment>
     </Sectionhead>
 

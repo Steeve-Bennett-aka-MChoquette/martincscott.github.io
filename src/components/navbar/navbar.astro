@@ -12,31 +12,26 @@ interface Props {
 
 const { currentLocale = 'fr' } = Astro.props;
 
-// Import translations
-let translations;
-try {
-  translations = await import(`../../i18n/${currentLocale}.json`);
-} catch (error) {
-  console.error(`Failed to load translations for ${currentLocale}`, error);
-  // Fallback to default locale
-  translations = await import(`../../i18n/fr.json`);
-}
+import { loadTranslations } from "../../utils/i18n";
+
+// Load translations
+const translations = await loadTranslations(null, currentLocale);
 
 const menuitems = [
   {
-    title: translations.default.nav.about,
+    title: translations.nav.about,
     path: `/${currentLocale}/about`,
   },
   {
-    title: translations.default.nav.projects,
+    title: translations.nav.projects,
     path: `/${currentLocale}/projects`,
   },
   {
-    title: translations.default.nav.blog,
+    title: translations.nav.blog,
     path: `/${currentLocale}/blog`,
   },
   {
-    title: translations.default.nav.contact,
+    title: translations.nav.contact,
     path: `/${currentLocale}/contact`,
   },
   {

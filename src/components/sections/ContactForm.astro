@@ -9,10 +9,8 @@ interface Props {
 
 const { locale = 'fr' } = Astro.props;
 
-// Import translations
-const mainTranslations = await import(`../../i18n/${locale}.json`);
-const contactTranslations = await import(`../../i18n/contact.json`);
-const translations = contactTranslations[locale] || contactTranslations.fr;
+// Load translations
+const translations = await loadTranslations('contact', locale);
 
 // Get environment variables in the component script
 const emailJsKey = import.meta.env.PUBLIC_EMAILJS_KEY;
