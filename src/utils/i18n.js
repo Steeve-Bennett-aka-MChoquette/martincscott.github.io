@@ -10,8 +10,8 @@
 export function getLocaleFromPath(path) {
   // Check if path is defined
   if (!path) {
-    console.warn('Path is undefined in getLocaleFromPath, defaulting to fr');
-    return 'fr';
+    console.warn('Path is undefined in getLocaleFromPath');
+    return undefined;
   }
   
   console.log('Getting locale from path:', path);
@@ -25,14 +25,8 @@ export function getLocaleFromPath(path) {
     }
   }
   
-  // If we're in the auth path but no locale is specified, default to 'en'
-  if (path.includes('/auth/')) {
-    console.log('Auth path detected but no locale found, defaulting to en');
-    return 'en';
-  }
-  
-  console.log('No locale found in path, defaulting to fr');
-  return 'fr'; // Default language (French)
+  console.log('No locale found in path');
+  return undefined; // No locale found
 }
 
 /**
@@ -63,12 +57,12 @@ export async function loadTranslations(namespace, locale = 'fr') {
       const authTranslations = await import(`../i18n/auth.json`);
       
       // Return the translations for the requested locale, or fall back to French
-      if (authTranslations[locale]) {
+      if (authTranslations.default[locale]) {
         console.log(`Using ${locale} translations from auth.json`);
-        return authTranslations[locale];
-      } else if (authTranslations.fr) {
+        return authTranslations.default[locale];
+      } else if (authTranslations.default.fr) {
         console.log(`Falling back to fr translations from auth.json`);
-        return authTranslations.fr;
+        return authTranslations.default.fr;
       }
       
       // If we couldn't find the translations, return the fallback

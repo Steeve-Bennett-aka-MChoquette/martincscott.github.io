@@ -4,28 +4,46 @@ import Link from "@components/ui/link.astro";
 import { Icon } from "astro-icon/components";
 import { getLocaleFromPath, loadTranslations } from "../../utils/i18n";
 
-// Get locale from URL or use default
+// Get locale from URL, default to 'fr' if none found
 const currentLocale = getLocaleFromPath(Astro.url.pathname) || 'fr';
 
-// Load translations
-const translations = await loadTranslations('auth', currentLocale);
+// Define interface for auth translations
+interface AuthTranslations {
+  signup?: string;
+  createAccount?: string;
+  email?: string;
+  password?: string;
+  alreadyHaveAccount?: string;
+  login?: string;
+  orLoginWith?: string;
+}
 
-export const title = translations.signup;
+// Load translations using the proper i18n utility with error handling
+let translations: { auth: AuthTranslations } = { auth: {} };
+try {
+  const loadedTranslations = await loadTranslations('auth', currentLocale);
+  translations.auth = loadedTranslations as AuthTranslations;
+} catch (error) {
+  console.error('Failed to load translations:', error);
+}
+
+// Set page title using translations with fallback and optional chaining
+export const title = translations.auth.signup || 'Sign Up';
 ---
 
 <MainLayout title={title}>
   <div class="auth-container">
-    <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{translations.createAccount}</h1>
+<h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{translations.auth.createAccount || 'Create Account'}</h1>
     
     <form id="signup-form" class="space-y-4">
       <div class="form-group">
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.email}</label>
+<label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.auth.email || 'Email'}</label>
         <input type="email" id="email" name="email" required 
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       </div>
       
       <div class="form-group">
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.password}</label>
+<label for="password" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.auth.password || 'Password'}</label>
         <input type="password" id="password" name="password" required
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         <p class="help-text text-sm mt-1 text-gray-500 dark:text-gray-400">Password must be at least 6 characters long</p>
@@ -33,17 +51,17 @@ export const title = translations.signup;
       
         <button type="submit" id="signup-button"
         class="w-full rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-5 py-2.5 bg-black text-white hover:bg-gray-800 border-2 border-transparent dark:bg-white dark:text-black dark:hover:bg-gray-200 dark:text-white flex items-center justify-center">
-        <span>{translations.createAccount}</span>
+<span>{translations.auth.createAccount || 'Create Account'}</span>
       </button>
       
-        <p class="auth-link text-gray-700 dark:text-gray-300 text-center text-sm">
-        {currentLocale === 'fr' ? 'Vous avez déjà un compte?' : 'Already have an account?'} 
-        <a href="/auth/login" class="text-blue-500 hover:underline dark:text-blue-400 ml-1">{translations.login}</a>
-      </p>
+<p class="auth-link text-gray-700 dark:text-gray-300 text-center text-sm">
+  {translations.auth.alreadyHaveAccount || (currentLocale === 'fr' ? 'Vous avez déjà un compte?' : 'Already have an account?')}
+  <a href="/auth/login" class="text-blue-500 hover:underline dark:text-blue-400 ml-1">{translations.auth.login || 'Login'}</a>
+</p>
     </form>
 
     <div class="social-login mt-6 text-center">
-        <h2 class="mb-3 text-base font-medium text-gray-700 dark:text-gray-300">{translations.orLoginWith}</h2>
+<h2 class="mb-3 text-base font-medium text-gray-700 dark:text-gray-300">{translations.auth.orLoginWith || 'Or login with'}</h2>
       <div class="flex justify-center space-x-2">
         <button id="github-signup" 
           class="m-1 rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-4 py-2 bg-white border-2 border-black hover:bg-gray-100 text-black dark:bg-black dark:border-white dark:hover:bg-gray-800 dark:text-white flex items-center">

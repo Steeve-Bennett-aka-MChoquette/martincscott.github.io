@@ -4,49 +4,84 @@ import Link from "@components/ui/link.astro";
 import { Icon } from "astro-icon/components";
 import { getLocaleFromPath, loadTranslations } from "../../utils/i18n";
 
-// Get locale from URL or use default
-const currentLocale = getLocaleFromPath(Astro.url.pathname) || 'fr';
+// Get locale from URL
+const currentLocale = getLocaleFromPath(Astro.url.pathname);
 
-// Import translations
-const authTranslations = await import(`../../i18n/auth.json`);
-const translations = authTranslations[currentLocale] || authTranslations.fr;
+// Redirect to French version if no locale specified
+if (!currentLocale) {
+  return {
+    redirect: '/fr/auth/login'
+  };
+}
 
-export const title = translations.login;
+// Define specific translation interface to ensure all required keys exist
+/**
+ * @typedef {Object} AuthTranslations
+ * @property {string} login
+ * @property {string} email
+ * @property {string} password
+ * @property {string} clientPortal
+ * @property {string} newToPortal
+ * @property {string} createAccount
+ * @property {string} needAssistance
+ * @property {string} orLoginWith
+ */
+
+// Load translations using the proper i18n utility with error handling
+/** @type {{ auth: AuthTranslations }} */
+let translations = { auth: {
+  login: 'Login',
+  email: 'Email',
+  password: 'Password',
+  clientPortal: 'Client Portal',
+  newToPortal: 'New to the portal?',
+  createAccount: 'Create Account',
+  needAssistance: 'Need assistance?',
+  orLoginWith: 'Or login with'
+} };
+try {
+  translations = await loadTranslations('auth', currentLocale);
+} catch (error) {
+  console.error('Failed to load translations:', error);
+}
+
+// Set page title using translations with fallback and optional chaining
+export const title = translations?.auth?.login || 'Login';
 ---
 
 <MainLayout title={title}>
   <div class="auth-container">
-      <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{translations.clientPortal}</h1>
+      <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{translations.auth.clientPortal}</h1>
     
     <form id="login-form" class="space-y-4">
       <div class="form-group">
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.email}</label>
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.auth.email}</label>
         <input type="email" id="email" name="email" required 
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       </div>
       
       <div class="form-group">
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.password}</label>
+        <label for="password" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">{translations.auth.password}</label>
         <input type="password" id="password" name="password" required
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       </div>
       
       <button type="submit" id="login-button"
         class="w-full rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-5 py-2.5 bg-black text-white hover:bg-gray-800 border-2 border-transparent dark:bg-white dark:text-black dark:hover:bg-gray-200 flex items-center justify-center">
-        <span>{translations.login}</span>
+        <span>{translations.auth.login}</span>
       </button>
       
         <p class="auth-link text-gray-700 dark:text-gray-300 text-center text-sm mt-4">
-          {translations.newToPortal} 
-          <a href="/auth/signup" class="text-blue-500 hover:underline dark:text-blue-400 ml-1">{translations.createAccount}</a>
+          {translations.auth.newToPortal} 
+          <a href="/auth/signup" class="text-blue-500 hover:underline dark:text-blue-400 ml-1">{translations.auth.createAccount}</a>
         </p>
         <p class="auth-link text-gray-700 dark:text-gray-300 text-center text-sm">
-          <a href="/auth/reset-password" class="text-blue-500 hover:underline dark:text-blue-400">{translations.needAssistance}</a>
+          <a href="/auth/reset-password" class="text-blue-500 hover:underline dark:text-blue-400">{translations.auth.needAssistance}</a>
         </p>
     </form>
 
     <div class="social-login mt-6 text-center">
-      <h2 class="mb-3 text-base font-medium text-gray-700 dark:text-gray-300">{translations.orLoginWith}</h2>
+        <h2 class="mb-3 text-base font-medium text-gray-700 dark:text-gray-300">{translations.auth.orLoginWith}</h2>
       <div class="flex justify-center space-x-2">
         <button id="github-login" 
           class="m-1 rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-4 py-2 bg-white border-2 border-black hover:bg-gray-100 text-black dark:bg-black dark:border-white dark:hover:bg-gray-800 dark:text-white flex items-center">
