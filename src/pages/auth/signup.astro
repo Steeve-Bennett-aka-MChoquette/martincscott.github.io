@@ -23,12 +23,17 @@ let translations: { auth: AuthTranslations } = { auth: {} };
 try {
   const loadedTranslations = await loadTranslations('auth', currentLocale);
   translations.auth = loadedTranslations as AuthTranslations;
+  
+  // Update the page title with translated value if available
+  if (translations.auth.signup) {
+    document.title = translations.auth.signup;
+  }
 } catch (error) {
   console.error('Failed to load translations:', error);
 }
 
-// Set page title using translations with fallback and optional chaining
-export const title = translations.auth.signup || 'Sign Up';
+// Set default page title
+export const title = 'Sign Up';
 ---
 
 <MainLayout title={title}>

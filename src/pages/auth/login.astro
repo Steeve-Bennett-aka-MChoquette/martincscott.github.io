@@ -7,46 +7,34 @@ import { getLocaleFromPath, loadTranslations } from "../../utils/i18n";
 // Get locale from URL
 const currentLocale = getLocaleFromPath(Astro.url.pathname);
 
-// Redirect to French version if no locale specified
-if (!currentLocale) {
-  return {
-    redirect: '/fr/auth/login'
-  };
+// Define interface for auth translations
+interface AuthTranslations {
+  login?: string;
+  email?: string;
+  password?: string;
+  clientPortal?: string;
+  newToPortal?: string;
+  createAccount?: string;
+  needAssistance?: string;
+  orLoginWith?: string;
 }
 
-// Define specific translation interface to ensure all required keys exist
-/**
- * @typedef {Object} AuthTranslations
- * @property {string} login
- * @property {string} email
- * @property {string} password
- * @property {string} clientPortal
- * @property {string} newToPortal
- * @property {string} createAccount
- * @property {string} needAssistance
- * @property {string} orLoginWith
- */
-
 // Load translations using the proper i18n utility with error handling
-/** @type {{ auth: AuthTranslations }} */
-let translations = { auth: {
-  login: 'Login',
-  email: 'Email',
-  password: 'Password',
-  clientPortal: 'Client Portal',
-  newToPortal: 'New to the portal?',
-  createAccount: 'Create Account',
-  needAssistance: 'Need assistance?',
-  orLoginWith: 'Or login with'
-} };
+let translations: { auth: AuthTranslations } = { auth: {} };
 try {
-  translations = await loadTranslations('auth', currentLocale);
+  const loadedTranslations = await loadTranslations('auth', currentLocale);
+  translations.auth = loadedTranslations as AuthTranslations;
+  
+  // Update the page title with translated value if available
+  if (translations.auth.login) {
+    document.title = translations.auth.login;
+  }
 } catch (error) {
   console.error('Failed to load translations:', error);
 }
 
-// Set page title using translations with fallback and optional chaining
-export const title = translations?.auth?.login || 'Login';
+// Set default page title
+export const title = 'Login';
 ---
 
 <MainLayout title={title}>
