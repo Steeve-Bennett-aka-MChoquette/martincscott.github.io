@@ -1,7 +1,6 @@
 ---
 import Container from "@components/container.astro";
 import Link from "@components/ui/link.astro";
-import Dropdown from "./dropdown.astro";
 import LanguageSwitcher from "../LanguageSwitcher.astro";
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 
@@ -14,24 +13,27 @@ const { currentLocale = 'fr' } = Astro.props;
 
 import { loadTranslations } from "../../utils/i18n";
 
-// Load translations
-const translations = await loadTranslations(null, currentLocale);
+// Load translations for main namespace (navigation)
+const mainTranslations = await loadTranslations(null, currentLocale);
+
+// Load translations for auth namespace (login/signup)
+const authTranslations = await loadTranslations('auth', currentLocale);
 
 const menuitems = [
   {
-    title: translations.nav.about,
+    title: mainTranslations.nav.about,
     path: `/${currentLocale}/about`,
   },
   {
-    title: translations.nav.projects,
+    title: mainTranslations.nav.projects,
     path: `/${currentLocale}/projects`,
   },
   {
-    title: translations.nav.blog,
+    title: mainTranslations.nav.blog,
     path: `/${currentLocale}/blog`,
   },
   {
-    title: translations.nav.contact,
+    title: mainTranslations.nav.contact,
     path: `/${currentLocale}/contact`,
   },
   {
@@ -82,8 +84,8 @@ const menuitems = [
         <div class="flex items-center gap-4">
           <!-- Desktop Login/Signup -->
           <div class="hidden lg:flex items-center gap-4">
-            <a href={`/${currentLocale}/auth/login`} class="text-gray-600 dark:text-gray-200 hover:text-gray-900">Log in</a>
-            <Link href={`/${currentLocale}/auth/signup`} size="md">Sign up</Link>
+<a href={`/${currentLocale}/auth/login`} class="text-gray-600 dark:text-gray-200 hover:text-gray-900">{authTranslations.login}</a>
+<Link href={`/${currentLocale}/auth/signup`} size="md">{authTranslations.signup}</Link>
           </div>
 
           <!-- Language Switcher -->
@@ -135,8 +137,8 @@ const menuitems = [
     </ul>
 
     <div class="flex flex-col gap-4 mt-4">
-      <Link href={`/${currentLocale}/auth/login`} style="outline" block size="md">Log in</Link>
-      <Link href={`/${currentLocale}/auth/signup`} style="primary" size="md" block>Sign up</Link>
+      <Link href={`/${currentLocale}/auth/login`} style="outline" block size="md">{authTranslations.login}</Link>
+      <Link href={`/${currentLocale}/auth/signup`} style="primary" size="md" block>{authTranslations.signup}</Link>
       
       <!-- Mobile Language Switcher -->
       <div class="flex justify-center mt-4">
