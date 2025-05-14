@@ -10,11 +10,13 @@ const currentLocale = currentPathSegments[0] || 'fr';
 // Import translations
 let translations;
 try {
-  translations = await import(`../i18n/${currentLocale}.json`);
+  const translationModule = await import(`../i18n/${currentLocale}.json`);
+  translations = translationModule.default;
 } catch (error) {
   console.error(`Failed to load translations for ${currentLocale}`, error);
   // Fallback to default locale
-  translations = await import(`../i18n/fr.json`);
+  const fallbackModule = await import(`../i18n/fr.json`);
+  translations = fallbackModule.default;
 }
 
 const features = [
@@ -59,10 +61,10 @@ const features = [
 
 <div class="mt-16 md:mt-0">
   <h2 class="text-center text-4xl lg:text-5xl font-bold lg:tracking-tight">
-    {translations.default.features.title}
+    {translations.features?.title || "Features"}
   </h2>
   <p class="text-center text-lg mt-4 text-slate-600 dark:text-slate-300">
-    {translations.default.features.subtitle}
+    {translations.features?.subtitle || "Everything you need to create your website"}
   </p>
 </div>
 

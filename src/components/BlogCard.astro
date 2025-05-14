@@ -9,7 +9,8 @@ interface Props {
 const { post, locale = 'fr' } = Astro.props;
 
 // Import translations
-const translations = await import(`../i18n/${locale}.json`);
+const translationModule = await import(`../i18n/${locale}.json`);
+const translations = translationModule.default;
 
 // Format date
 function formatDate(dateString: string) {
@@ -47,7 +48,7 @@ function formatDate(dateString: string) {
       set:html={post.excerpt.rendered} 
     />
     <a href={`/${locale}/blog/${post.slug}`} class="text-rose-flash hover:underline inline-flex items-center">
-      {translations.default.blog.readMore}
+      {translations.blog?.readMore || "Read More"}
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>

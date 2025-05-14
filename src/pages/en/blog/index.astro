@@ -15,14 +15,15 @@ const posts = await getAllPosts(page, PER_PAGE, currentLocale);
 const totalPages = await getTotalPages(PER_PAGE, currentLocale);
 
 // Import translations
-const translations = await import(`../../../i18n/${currentLocale}.json`);
+const translationModule = await import(`../../../i18n/${currentLocale}.json`);
+const translations = translationModule.default;
 ---
 <div class="relative overflow-x-hidden supports-[overflow-x:clip]:overflow-x-clip">
-  <MainLayout title={translations.default.blog.title}>
+  <MainLayout title={translations.blog?.title || "Blog"}>
   <Gradient />
     <section class="py-16 px-4 max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl mb-4">{translations.default.blog.title}</h1>
+        <h1 class="text-4xl md:text-5xl mb-4">{translations.blog?.title || "Blog"}</h1>
         <p class="text-paragraph dark:text-paragraph-dark max-w-2xl mx-auto">
           Thoughts, insights, and updates from my journey as a developer.
         </p>

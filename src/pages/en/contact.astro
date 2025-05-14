@@ -9,13 +9,14 @@ import { Icon } from "astro-icon/components";
 const currentLocale = 'en';
 
 // Import translations
-const translations = await import(`../../i18n/${currentLocale}.json`);
+const translationModule = await import(`../../i18n/${currentLocale}.json`);
+const translations = translationModule.default;
 ---
 
-<MainLayout title={translations.default.contact.title}>
+<MainLayout title={translations.contact?.title || "Contact"}>
  <Container>
    <Sectionhead>
-     <Fragment slot="title">{translations.default.contact.title}</Fragment>
+     <Fragment slot="title">{translations.contact?.title || "Contact"}</Fragment>
      <Fragment slot="desc">Let's get in touch</Fragment>
    </Sectionhead>
 

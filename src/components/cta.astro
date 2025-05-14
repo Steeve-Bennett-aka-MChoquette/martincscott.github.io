@@ -9,24 +9,26 @@ const currentLocale = currentPathSegments[0] || 'fr';
 // Import translations
 let translations;
 try {
-  translations = await import(`../i18n/${currentLocale}.json`);
+  const translationModule = await import(`../i18n/${currentLocale}.json`);
+  translations = translationModule.default;
 } catch (error) {
   console.error(`Failed to load translations for ${currentLocale}`, error);
   // Fallback to default locale
-  translations = await import(`../i18n/fr.json`);
+  const fallbackModule = await import(`../i18n/fr.json`);
+  translations = fallbackModule.default;
 }
 ---
 
 <div class="gradient-border mx-auto max-w-5xl mt-24">
   <div class="flex flex-col feature-card bg-white dark:bg-deep-purple shadow-md rounded-lg p-6 items-center text-center dark-transition">
     <h2 class="text-black dark:text-white text-4xl md:text-6xl tracking-tight font-semibold mt-12">
-      {translations.default.cta.title}
+      {translations.cta?.title || "Let's build something together"}
     </h2>
     <p class="text-slate-950 dark:text-paragraph-dark mt-4 text-lg md:text-xl leading-relaxed">
-      {translations.default.cta.subtitle}
+      {translations.cta?.subtitle || "Ready to transform your vision into digital reality?"}
     </p>
     <div class="mb-12 flex mt-8">
-      <Link href={`/${currentLocale}/contact`} style="outline">{translations.default.cta.button}</Link>
+      <Link href={`/${currentLocale}/contact`} style="outline">{translations.cta?.button || "Contact me"}</Link>
     </div>
   </div>
 </div>
