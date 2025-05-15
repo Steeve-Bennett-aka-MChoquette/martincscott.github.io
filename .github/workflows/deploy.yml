@@ -37,6 +37,8 @@ jobs:
           echo "Running Astro build with verbose logging..."
           npx astro build --verbose
 
+          cp public/index.html dist/index.html
+
       - name: Create .nojekyll
         run: touch dist/.nojekyll
 
