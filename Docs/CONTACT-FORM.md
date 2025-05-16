@@ -87,7 +87,7 @@ The component consists of:
 
 ### CSS Styling
 
-The form includes custom CSS for validation states:
+The form includes custom CSS for validation states with dark mode support:
 
 ```css
 .invalid-feedback,
@@ -103,6 +103,18 @@ The form includes custom CSS for validation states:
 .is-invalid,
 .was-validated :invalid {
   border-color: #dc3545;
+}
+
+/* Dark mode validation */
+.dark .is-invalid,
+.dark .was-validated :invalid {
+  border-color: #ef4444; /* red-400 for better dark mode contrast */
+}
+.dark .text-red-500 {
+  color: #f87171; /* red-300 for better visibility */
+}
+.dark .text-green-500 {
+  color: #4ade80; /* green-400 for better visibility */
 }
 ```
 
@@ -152,61 +164,111 @@ Turnstile is integrated for spam protection:
 The form submission is handled by JavaScript:
 
 ```javascript
-let form = document.getElementById("form");
-let result = document.getElementById("result");
-
-form.addEventListener("submit", async function (e) {
-  e.preventDefault();
-  form.classList.add("was-validated");
-
-  if (!form.checkValidity()) {
-    form.querySelectorAll(":invalid")[0].focus();
-    return;
-  }
-
-  if (!window.turnstileToken) {
-    result.classList.add("text-red-500");
-    result.innerHTML = "Please complete the captcha";
-    return;
-  }
-
+document.addEventListener('DOMContentLoaded', function() {
   try {
-    result.innerHTML = "Sending...";
+    let form = document.getElementById("form");
+    let result = document.getElementById("result");
 
-    const templateParams = {
-      from_name: form.from_name.value,
-      reply_to: form.reply_to.value,
-      message: form.message.value,
-      'cf-turnstile-response': window.turnstileToken
-    };
+    if (!form || !result) {
+      console.error('Form or result element not found');
+      return;
+    }
 
-    const response = await emailjs.send(
-      emailJsServiceId,
-      emailJsTemplateId,
-      templateParams,
-      emailJsKey
-    );
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      form.classList.add("was-validated");
 
-    console.log('SUCCESS!', response.status, response.text);
-    result.classList.remove("text-red-500");
-    result.classList.add("text-green-500");
-    result.innerHTML = "Message sent successfully!";
-    
-    // Reset form and captcha
-    form.reset();
-    form.classList.remove("was-validated");
-    turnstile.reset();
-    window.turnstileToken = null;
+      // Remove any existing error messages
+      result.classList.remove("text-red-500", "text-green-500");
+      result.innerHTML = "";
 
-    // Clear success message after 5 seconds
-    setTimeout(() => {
-      result.style.display = "none";
-    }, 5000);
+      if (!form.checkValidity()) {
+        // Show the first validation error
+        const firstInvalid = form.querySelectorAll(":invalid")[0];
+        if (firstInvalid) {
+          const invalidInput = firstInvalid.querySelector("input, textarea");
+          if (invalidInput) invalidInput.focus();
+          else firstInvalid.focus();
+          
+          // Show error message
+          const errorDiv = firstInvalid.querySelector(".invalid-feedback, .empty-feedback");
+          if (errorDiv) {
+            errorDiv.style.display = "block";
+          }
+        }
+        return;
+      }
 
-  } catch(error) {
-    console.log('FAILED...', error);
-    result.classList.add("text-red-500");
-    result.innerHTML = "Failed to send: " + error.text;
+      // Check if turnstile is available
+      if (typeof window.turnstileToken === 'undefined') {
+        console.warn('Turnstile token not found. This might be due to Turnstile not loading properly.');
+        // Continue anyway for build process
+      } else if (!window.turnstileToken) {
+        result.classList.add("text-red-500");
+        result.innerHTML = "Please complete the captcha";
+        return;
+      }
+
+      try {
+        // Clear all error messages
+        document.querySelectorAll(".invalid-feedback, .empty-feedback").forEach(el => {
+          el.style.display = "none";
+        });
+        
+        result.innerHTML = "Sending...";
+        result.setAttribute("aria-busy", "true");
+
+        // Check if EmailJS is available
+        if (typeof emailjs === 'undefined') {
+          throw new Error('EmailJS not loaded');
+        }
+
+        const templateParams = {
+          from_name: form.from_name.value,
+          reply_to: form.reply_to.value,
+          message: form.message.value,
+          'cf-turnstile-response': window.turnstileToken || 'not-available'
+        };
+
+        const response = await emailjs.send(
+          emailJsServiceId,
+          emailJsTemplateId,
+          templateParams,
+          emailJsKey
+        );
+
+        console.log('SUCCESS!', response.status, response.text);
+        result.classList.remove("text-red-500");
+        result.classList.add("text-green-500");
+        result.innerHTML = "Message sent successfully!";
+        
+        // Reset form and captcha
+        form.reset();
+        form.classList.remove("was-validated");
+        
+        // Reset turnstile if available
+        if (typeof turnstile !== 'undefined') {
+          turnstile.reset();
+        }
+        window.turnstileToken = null;
+
+        // Clear success message after 5 seconds
+        setTimeout(() => {
+          result.style.display = "none";
+        }, 5000);
+        
+        // Remove aria-busy attribute
+        result.removeAttribute("aria-busy");
+
+      } catch(error) {
+        console.error('FAILED...', error);
+        result.classList.add("text-red-500");
+        result.innerHTML = "Failed to send: " + (error.text || error.message || 'Unknown error');
+        result.removeAttribute("aria-busy");
+      }
+    });
+  } catch (error) {
+    console.error('Error setting up form handler:', error);
   }
 });
 ```

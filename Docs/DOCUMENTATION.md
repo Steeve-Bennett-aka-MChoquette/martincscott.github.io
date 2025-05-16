@@ -4,6 +4,15 @@
 
 This is a personal portfolio website built with Astro, a modern static site generator. The site features a responsive design with dark mode support, a blog section that pulls content from WordPress, and a contact form with Cloudflare Turnstile protection.
 
+## Getting Started
+
+To get started with this project:
+
+1. **Clone the repository**: `git clone [repository-url]`
+2. **Install dependencies**: `npm install`
+3. **Start development server**: `npm run dev` (runs at localhost:4321)
+4. **Create a `.env` file** with your environment variables (see Environment Variables section)
+
 ## Documentation Structure
 
 This documentation is organized into several files:
@@ -171,7 +180,7 @@ The site is configured to be deployed to GitHub Pages, as indicated by the prese
 
 Based on the codebase review, potential improvements could include:
 
-1. Adding more content to the team section
+1. Adding more content to the team section (currently just a placeholder)
 2. Implementing a projects/portfolio page (referenced in about.astro but not implemented)
 3. Enhancing the blog with categories and tags
 4. Adding search functionality to the blog
