@@ -2,37 +2,37 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import Button from "../../components/ui/button.astro";
 import { supabase } from "../../utils/supabase";
-import { loadTranslations } from "../../utils/i18n";
+import secureTranslations from "../../i18n/secure.json";
 
 // Set current locale
 const currentLocale = 'fr';
 
 // Load translations
-const translations = await loadTranslations('secure', currentLocale);
+const translations = (secureTranslations[currentLocale] || secureTranslations.en).secure;
 ---
 
-<MainLayout title={translations.secure.title}>
+<MainLayout title={translations.title}>
   <div class="auth-container max-w-sm mx-auto p-8">
-    <h1 class="text-4xl lg:text-5xl font-bold text-heading dark:text-heading-dark">{translations.secure.title}</h1>
+    <h1 class="text-4xl lg:text-5xl font-bold text-heading dark:text-heading-dark">{translations.title}</h1>
     
     <div id="user-info" class="hidden p-8 border border-gray-200 rounded-lg bg-white dark:bg-deep-purple dark:border-gray-700">
-      <p>{translations.secure.welcome}, <span id="user-email" class="font-bold text-rose-flash dark:text-rose-flash"></span>!</p>
-      <button class="w-full mt-4 bg-rose-flash hover:bg-rose-flash-dark text-white py-2 px-4 rounded transition-colors duration-200" id="logout-button">{translations.secure.logout}</button>
+      <p>{translations.welcome}, <span id="user-email" class="font-bold text-rose-flash dark:text-rose-flash"></span>!</p>
+      <button class="w-full mt-4 bg-rose-flash hover:bg-rose-flash-dark text-white py-2 px-4 rounded transition-colors duration-200" id="logout-button">{translations.logout}</button>
     </div>
     
-    <div id="loading" class="text-center p-8">{translations.secure.loading}</div>
+    <div id="loading" class="text-center p-8">{translations.loading}</div>
   </div>
 
   <script>
     // This script runs in the browser
-    import { supabase } from '../../../utils/supabase';
-    import { loadTranslations } from '../../../utils/i18n';
+    import { supabase } from '../../utils/supabase';
+    import secureTranslations from '../../i18n/secure.json';
     
     // Get current locale from URL
     const currentLocale = 'fr';
     
     // Load translations
-    const translations = await loadTranslations('secure', currentLocale);
+    const translations = (secureTranslations[currentLocale] || secureTranslations.en).secure;
     
     // Check authentication status
     async function checkAuthStatus() {
@@ -59,12 +59,12 @@ const translations = await loadTranslations('secure', currentLocale);
             // Redirect to login after logout
             window.location.href = `/${currentLocale}/auth/login`;
           } catch (error) {
-            alert(`${translations.secure.logoutError}: ${error.message}`);
+            alert(`${translations.logoutError}: ${error.message}`);
           }
         });
       } catch (error) {
         console.error('Auth check error:', error);
-        alert(`${translations.secure.authError}: ${error.message}`);
+        alert(`${translations.authError}: ${error.message}`);
       }
     }
     
