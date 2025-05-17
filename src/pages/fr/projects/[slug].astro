@@ -1,0 +1,85 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import ProjectCard from "../../../components/ProjectCard.astro";
+import { getProjectBySlug, getAllProjects } from "../../../lib/wordpress";
+import { loadTranslations } from "../../../utils/i18n";
+
+// Set current locale
+const currentLocale = 'fr';
+
+// Load translations
+const mainTranslations = await loadTranslations(null, currentLocale);
+const projectTranslations = await loadTranslations('projects', currentLocale);
+
+export async function getStaticPaths() {
+  const locale = 'fr';
+  const projects = await getAllProjects(1, 100, locale);
+  return projects.map(project => ({ params: { slug: project.slug } }));
+}
+
+const { slug } = Astro.params;
+const project = await getProjectBySlug(slug || '', currentLocale);
+
+if (!project) {
+  return Astro.redirect(`/${currentLocale}/404`);
+}
+
+// Format date
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+// Get content from ACF or fallback to WordPress content
+function getContent(project) {
+  if (project?.acf?.content) {
+    return project.acf.content;
+  }
+  
+  if (project?.content?.rendered) {
+    return project.content.rendered;
+  }
+  
+  return "<p>No content available for this project.</p>";
+}
+---
+
+    <MainLayout 
+      title={project.title.rendered}
+      description={getContent(project).replace(/<[^>]*>/g, '').substring(0, 160) || projectTranslations.defaultDescription}
+    >
+  <article class="py-16 px-4 max-w-4xl mx-auto">
+    <header class="mb-16">
+      <h1 class="text-3xl lg:text-4xl xl:text-5xl mb-8 font-bold leading-tight" set:html={project.title.rendered} />
+      <p class="text-gray-500 dark:text-gray-400 text-xl mb-12">
+        {projectTranslations.publishedOn} {formatDate(project.date)}
+      </p>
+      
+      {project?.acf?.image && (
+        <div class="mb-14 rounded-lg overflow-hidden">
+          <img 
+            src={project.acf.image} 
+            alt={project.title.rendered}
+            class="w-full max-h-[600px] object-cover"
+          />
+        </div>
+      )}
+    </header>
+    
+    <div class="prose-lg md:prose-xl lg:prose-2xl dark:prose-invert max-w-none blog-content">
+      <div set:html={project?.acf?.content || projectTranslations.noContent} />
+    </div>
+    
+    <div class="mt-20 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <a href={`/${currentLocale}/projects`} class="text-rose-flash hover:underline inline-flex items-center text-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        {projectTranslations.backToAll}
+      </a>
+    </div>
+  </article>
+</MainLayout>

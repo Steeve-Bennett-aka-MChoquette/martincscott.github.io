@@ -1,0 +1,57 @@
+---
+import { type WordPressProject } from "../lib/wordpress";
+
+interface Props {
+  project: WordPressProject;
+  locale?: string;
+}
+
+const { project, locale = 'fr' } = Astro.props;
+
+// Import translations
+const translationModule = await import(`../i18n/${locale}.json`);
+const translations = translationModule.default;
+
+// Format date
+export function formatDate(dateString: string, locale: string) {
+  return new Date(dateString).toLocaleDateString(
+    locale === 'fr' ? 'fr-FR' : 'en-US', 
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+  );
+}
+---
+
+<article class="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md transition hover:shadow-lg">
+  {project._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+    <div class="aspect-video overflow-hidden">
+      <img 
+        src={project._embedded?.['wp:featuredmedia']?.[0]?.source_url} 
+        alt={project._embedded?.['wp:featuredmedia']?.[0]?.alt_text || project.title?.rendered || "Project image"}
+        class="w-full h-full object-cover"
+      />
+    </div>
+  )}
+  <div class="p-6">
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+        {formatDate(project.date, locale)}
+    </p>
+    <h2 class="text-xl font-bold mb-2 line-clamp-2">
+      <a href={`/${locale}/projects/${project.slug}`} class="hover:text-rose-flash">
+        {project.title?.rendered || "Untitled Project"}
+      </a>
+    </h2>
+      <div class="prose-sm dark:prose-invert line-clamp-3 mb-4"
+        set:html={project.excerpt?.rendered || ""} 
+      />
+    <a href={`/${locale}/projects/${project.slug}`} class="text-rose-flash hover:underline inline-flex items-center">
+      {translations.projects?.viewDetails || "View Details"}
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
+</article>

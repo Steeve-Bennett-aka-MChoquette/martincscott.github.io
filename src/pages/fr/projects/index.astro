@@ -1,13 +1,19 @@
 ---
 import MainLayout from "../../../layouts/MainLayout.astro";
+import ProjectCard from "../../../components/ProjectCard.astro";
 import { getAllProjects, getTotalProjectPages } from "../../../lib/wordpress";
 import Pagination from "../../../components/Pagination.astro";
+import { loadTranslations } from "../../../utils/i18n";
 
 const PER_PAGE = 9;
 const page = 1;
 
 // Get current locale from URL
 const locale = "fr";
+
+// Load translations
+const mainTranslations = await loadTranslations(null, locale);
+const projectTranslations = await loadTranslations('projects', locale);
 
 // Fetch projects with error handling
 let projects = [];
@@ -93,38 +99,15 @@ function getContentSnippet(project) {
                 </div>
               )}
               
-              <!-- Content section -->
+              <!-- Use ProjectCard component -->
               <div class="p-6">
-                <!-- Date -->
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  {project?.date ? formatDate(project.date) : "Aucune date disponible"}
-                </p>
-                
-                <!-- Title -->
-                <h3 class="text-xl font-bold mb-2 line-clamp-2">
-                  <a href={project?.slug ? `/fr/projects/${project.slug}` : "#"} class="hover:text-rose-flash">
-                    {project?.title?.rendered || "Projet sans titre"}
-                  </a>
-                </h3>
-                
-                <!-- Description - Using a snippet of the content -->
-                <div class="text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
-                  <div set:html={getContentSnippet(project)} />
-                </div>
-                
-                <!-- Read more link -->
-                <a href={project?.slug ? `/fr/projects/${project.slug}` : "#"} class="text-rose-flash hover:underline inline-flex items-center">
-                  Lire la suite
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
+                <ProjectCard project={project} locale={locale} />
               </div>
             </article>
           ))} 
         </div>
       )}
-      
+
       {totalPages > 1 && 
         <Pagination 
           currentPage={page} 
