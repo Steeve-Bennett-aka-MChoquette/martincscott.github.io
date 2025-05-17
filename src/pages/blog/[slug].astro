@@ -27,7 +27,21 @@ function formatDate(dateString: string) {
 }
 ---
 
-<MainLayout title={post.title.rendered} openGraphType="article">
+<MainLayout 
+title={post.meta.slim_seo.title || post.title.rendered}
+  description={post.meta.slim_seo.description} 
+  openGraphType="article"
+  openGraphImages={post._embedded?.['wp:featuredmedia']?.[0]?.source_url ? 
+    [{ url: post.meta.slim_seo.og_image || post._embedded['wp:featuredmedia'][0].source_url }] : 
+    undefined}
+  twitterCard={post._embedded?.['wp:featuredmedia']?.[0]?.source_url ? 
+    { 
+      card: "summary_large_image", 
+      site: "@martincscott", 
+      images: [post.meta.slim_seo.og_image || post._embedded['wp:featuredmedia'][0].source_url] 
+    } : 
+    undefined}
+>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",

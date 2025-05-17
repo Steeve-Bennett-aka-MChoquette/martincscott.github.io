@@ -22,10 +22,30 @@ export interface WordPressPost {
     rendered: string;
   };
   featured_media: number;
+  meta: {
+    slim_seo: {
+      title: string;
+      description: string;
+      og_image: string;
+    };
+  };
   _embedded?: {
     'wp:featuredmedia'?: Array<{
-      source_url: string;
-      alt_text: string;
+      source_url?: string;
+      alt_text?: string;
+      media_details?: {
+        sizes?: {
+          full?: {
+            source_url?: string;
+          };
+          medium?: {
+            source_url?: string;
+          };
+        };
+      };
+      guid?: {
+        rendered?: string;
+      };
     }>;
     author?: Array<{
       name: string;
@@ -60,12 +80,61 @@ export interface WordPressProject {
 }
 
 /**
+ * Get a single blog post by slug
+ */
+export async function getPostBySlug(slug: string, lang = 'fr'): Promise<WordPressPost | null> {
+  try {
+    const url = `${BLOG_API_URL}/posts?_embed=wp:featuredmedia&slug=${slug}&lang=${lang}`;
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post: ${response.statusText}`);
+    }
+    
+    const posts = await response.json();
+    
+    if (posts.length === 0) {
+      return null;
+    }
+    
+    const post = posts[0];
+    
+    // If no featured media found but we have a featured_media ID, try direct fetch
+    if (post.featured_media && (!post._embedded || !post._embedded['wp:featuredmedia'] || !post._embedded['wp:featuredmedia'][0]?.source_url)) {
+      try {
+        const mediaUrl = `${BLOG_API_URL}/media/${post.featured_media}`;
+        const mediaResponse = await fetch(mediaUrl);
+        
+        if (mediaResponse.ok) {
+          const mediaData = await mediaResponse.json();
+          
+          // Ensure _embedded exists
+          if (!post._embedded) {
+            post._embedded = {};
+          }
+          
+          // Add the media data
+          post._embedded['wp:featuredmedia'] = [mediaData];
+        }
+      } catch (mediaError) {
+        console.error(`Error fetching media:`, mediaError);
+      }
+    }
+    
+    return post;
+  } catch (error) {
+    console.error(`Error fetching post:`, error);
+    return null;
+  }
+}
+
+/**
  * Fetch all blog posts with pagination support
  */
 export async function getAllPosts(page = 1, perPage = 10, lang = 'fr'): Promise<WordPressPost[]> {
   try {
     const response = await fetch(
-      `${BLOG_API_URL}/posts?_embed=true&page=${page}&per_page=${perPage}&lang=${lang}`
+      `${BLOG_API_URL}/posts?_embed=wp:featuredmedia&page=${page}&per_page=${perPage}&lang=${lang}`
     );
     
     if (!response.ok) {
@@ -74,29 +143,8 @@ export async function getAllPosts(page = 1, perPage = 10, lang = 'fr'): Promise<
     
     return await response.json();
   } catch (error) {
-    console.error('Error fetching WordPress posts');
+    console.error('Error fetching WordPress posts:', error);
     return [];
-  }
-}
-
-/**
- * Get a single blog post by slug
- */
-export async function getPostBySlug(slug: string, lang = 'fr'): Promise<WordPressPost | null> {
-  try {
-    const response = await fetch(
-      `${BLOG_API_URL}/posts?_embed=true&slug=${slug}&lang=${lang}`
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch post: ${response.statusText}`);
-    }
-    
-    const posts = await response.json();
-    return posts.length > 0 ? posts[0] : null;
-  } catch (error) {
-    console.error(`Error fetching post`);
-    return null;
   }
 }
 
@@ -227,4 +275,38 @@ export async function getProjectTranslations(projectId: number): Promise<Record<
     console.error('Error fetching project translations');
     return {};
   }
+}
+
+/**
+ * Helper function to extract featured image URL from WP post
+ */
+export function extractFeaturedImageUrl(post: WordPressPost): string | null {
+  if (!post) return null;
+  
+  // Standard path
+  if (post._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
+    return post._embedded['wp:featuredmedia'][0].source_url;
+  }
+  
+  // Alternate path sometimes used in WordPress
+  if (post._embedded?.['wp:featuredmedia']?.[0]?.media_details?.sizes?.full?.source_url) {
+    return post._embedded['wp:featuredmedia'][0].media_details.sizes.full.source_url;
+  }
+  
+  // Try medium size
+  if (post._embedded?.['wp:featuredmedia']?.[0]?.media_details?.sizes?.medium?.source_url) {
+    return post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url;
+  }
+  
+  // Some WP setups use guid for image URL
+  if (post._embedded?.['wp:featuredmedia']?.[0]?.guid?.rendered) {
+    return post._embedded['wp:featuredmedia'][0].guid.rendered;
+  }
+  
+  // Check for SEO image from Slim SEO
+  if (post.meta?.slim_seo?.og_image) {
+    return post.meta.slim_seo.og_image;
+  }
+  
+  return null;
 }

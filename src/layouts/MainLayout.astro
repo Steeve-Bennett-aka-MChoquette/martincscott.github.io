@@ -16,6 +16,13 @@ const translations = await loadTranslations(null, currentLocale);
 export interface Props {
   title: string;
   openGraphType?: string;
+  description?: string;
+  openGraphImages?: { url: string }[];
+  twitterCard?: { 
+    card: string; 
+    site: string; 
+    images: string[]; 
+  };
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
@@ -24,7 +31,7 @@ const resolvedImageWithDomain = new URL(
   Astro.site
 ).toString();
 
-const { title, openGraphType } = Astro.props;
+  const { title, openGraphType, description, openGraphImages, twitterCard } = Astro.props;
 const makeTitle = title
   ? title + " | " + translations.site.title
   : translations.site.title;
@@ -37,25 +44,26 @@ const makeTitle = title
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <SEO
-      title={makeTitle}
-      description={translations.site.description || ""}
-      canonical={canonicalURL}
-      openGraph={{
-        basic: {
-          title: makeTitle,
-          type: openGraphType || "website",
-          image: resolvedImageWithDomain,
-          url: canonicalURL
-        },
-        image: {
-          alt: "Martin C Scott Homepage Screenshot",
-          width: 1200,
-          height: 630,
-          type: "image/jpeg"
-        }
-      }}
-    />
+      <SEO
+        title={makeTitle}
+        description={description || translations.site.description || ""}
+        canonical={canonicalURL}
+        openGraph={{
+          basic: {
+            title: makeTitle,
+            type: openGraphType || "website",
+            image: openGraphImages?.[0]?.url || resolvedImageWithDomain,
+            url: canonicalURL
+          },
+          image: {
+            alt: "Martin C Scott Homepage Screenshot",
+            width: 1200,
+            height: 630,
+            type: "image/jpeg"
+          }
+        }}
+        twitter={twitterCard}
+      />
     <style is:global>
       @import "../styles/utilities.css";
       @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');

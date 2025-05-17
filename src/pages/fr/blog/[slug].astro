@@ -1,6 +1,6 @@
 ---
 import MainLayout from "../../../layouts/MainLayout.astro";
-import { getPostBySlug, getAllPosts } from "../../../lib/wordpress";
+import { getPostBySlug, getAllPosts, extractFeaturedImageUrl } from "../../../lib/wordpress";
 import { loadTranslations } from "../../../utils/i18n";
 
 // Set current locale
@@ -11,13 +11,9 @@ const mainTranslations = await loadTranslations(null, currentLocale);
 const blogTranslations = await loadTranslations('blog', currentLocale);
 
 export async function getStaticPaths() {
-  // Define currentLocale inside the function
   const locale = 'fr';
-  const posts = await getAllPosts(1, 100, locale); // Fetch enough posts for static generation
-  
-  return posts.map(post => ({
-    params: { slug: post.slug },
-  }));
+  const posts = await getAllPosts(1, 100, locale);
+  return posts.map(post => ({ params: { slug: post.slug } }));
 }
 
 const { slug } = Astro.params;
@@ -26,6 +22,13 @@ const post = await getPostBySlug(slug || '', currentLocale);
 if (!post) {
   return Astro.redirect(`/${currentLocale}/404`);
 }
+
+// Get the featured image URL
+const featuredImageUrl = extractFeaturedImageUrl(post);
+
+// Determine the best image for Open Graph
+// First try the Slim SEO og_image, then fall back to the featured image
+const ogImageUrl = post.meta?.slim_seo?.og_image || featuredImageUrl;
 
 // Format date
 function formatDate(dateString: string) {
@@ -37,7 +40,17 @@ function formatDate(dateString: string) {
 }
 ---
 
-<MainLayout title={post.title.rendered}>
+<MainLayout 
+  title={post.meta?.slim_seo?.title || post.title.rendered}
+  description={post.meta?.slim_seo?.description || post.excerpt?.rendered.replace(/<[^>]*>/g, '').trim()}
+  openGraphType="article"
+  openGraphImages={ogImageUrl ? [{ url: ogImageUrl }] : undefined}
+  twitterCard={ogImageUrl ? { 
+    card: "summary_large_image", 
+    site: "@martincscott", 
+    images: [ogImageUrl] 
+  } : undefined}
+>
   <article class="py-16 px-4 max-w-4xl mx-auto">
     <header class="mb-16">
       <h1 class="text-3xl lg:text-4xl xl:text-5xl mb-8 font-bold leading-tight" set:html={post.title.rendered} />
@@ -45,11 +58,11 @@ function formatDate(dateString: string) {
         {blogTranslations.publishedOn} {formatDate(post.date)}
       </p>
       
-      {post._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+      {featuredImageUrl && (
         <div class="mb-14 rounded-lg overflow-hidden">
           <img 
-            src={post._embedded['wp:featuredmedia'][0].source_url} 
-            alt={post._embedded['wp:featuredmedia'][0].alt_text || post.title.rendered}
+            src={featuredImageUrl} 
+            alt={post._embedded?.['wp:featuredmedia']?.[0]?.alt_text || post.title.rendered}
             class="w-full max-h-[600px] object-cover"
           />
         </div>
