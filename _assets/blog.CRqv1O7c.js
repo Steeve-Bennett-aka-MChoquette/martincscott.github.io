@@ -1,1 +1,0 @@
-const e={title:"Blog",recentPosts:"Recent Posts",readMore:"Read More",postedOn:"Posted on",backToList:"Back to Blog List",publishedOn:"Published on"},t={title:"Blog",recentPosts:"Articles Récents",readMore:"Lire la Suite",postedOn:"Publié le",backToList:"Retour à la Liste du Blog",publishedOn:"Publié le"},o={en:e,fr:t};export{o as default,e as en,t as fr};
