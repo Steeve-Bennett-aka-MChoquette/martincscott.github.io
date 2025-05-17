@@ -17,7 +17,7 @@ const translations = await loadTranslations('secure', currentLocale);
     
     <div id="user-info" class="hidden p-8 border border-gray-200 rounded-lg bg-white dark:bg-deep-purple dark:border-gray-700">
       <p>{translations.welcome}, <span id="user-email" class="font-bold text-rose-flash dark:text-rose-flash"></span>!</p>
-      <Button style="primary" size="md" class="w-full mt-4" id="logout-button">{translations.logout}</Button>
+      <button class="w-full mt-4 bg-rose-flash hover:bg-rose-flash-dark text-white py-2 px-4 rounded transition-colors duration-200" id="logout-button">{translations.logout}</button>
     </div>
     
     <div id="loading" class="text-center p-8">{translations.loading}</div>
