@@ -1,0 +1,18 @@
+{
+  "en": {
+    "title": "Secure Dashboard",
+    "welcome": "Welcome",
+    "logout": "Logout",
+    "loading": "Loading...",
+    "authError": "Authentication error",
+    "logoutError": "Error logging out"
+  },
+  "fr": {
+    "title": "Tableau de bord sécurisé",
+    "welcome": "Bienvenue",
+    "logout": "Se déconnecter",
+    "loading": "Chargement...",
+    "authError": "Erreur d'authentification",
+    "logoutError": "Erreur lors de la déconnexion"
+  }
+}
