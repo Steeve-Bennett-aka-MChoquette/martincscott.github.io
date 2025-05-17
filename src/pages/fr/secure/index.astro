@@ -8,7 +8,8 @@ import { loadTranslations } from "../../../utils/i18n";
 const currentLocale = 'fr';
 
 // Load translations
-const translations = await loadTranslations('secure', currentLocale);
+const authTranslations = await import(`../../../i18n/secure.json`);
+const translations = authTranslations[currentLocale] || authTranslations.fr;
 ---
 
 <MainLayout title={translations.title}>
