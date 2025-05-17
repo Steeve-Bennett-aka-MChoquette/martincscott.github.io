@@ -27,7 +27,22 @@ function formatDate(dateString: string) {
 }
 ---
 
-<MainLayout title={post.title.rendered}>
+<MainLayout title={post.title.rendered} openGraphType="article">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{post.title.rendered}",
+      "datePublished": "{post.date}",
+      "dateModified": "{post.modified}",
+      "author": {
+        "@type": "Person",
+        "name": "Martin C Scott"
+      },
+      "image": "{post._embedded?.['wp:featuredmedia']?.[0]?.source_url}",
+      "url": "https://martincscott.com/blog/{post.slug}"
+    }
+  </script>
   <article class="py-16 px-4 max-w-4xl mx-auto">
     <header class="mb-16">
       <h1 class="text-3xl lg:text-4xl xl:text-5xl mb-8 font-bold leading-tight" set:html={post.title.rendered} />

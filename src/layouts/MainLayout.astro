@@ -15,6 +15,7 @@ const translations = await loadTranslations(null, currentLocale);
 
 export interface Props {
   title: string;
+  openGraphType?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
@@ -23,7 +24,7 @@ const resolvedImageWithDomain = new URL(
   Astro.site
 ).toString();
 
-const { title } = Astro.props;
+const { title, openGraphType } = Astro.props;
 const makeTitle = title
   ? title + " | " + translations.site.title
   : translations.site.title;
@@ -43,8 +44,15 @@ const makeTitle = title
       openGraph={{
         basic: {
           title: makeTitle,
-          type: "website",
+          type: openGraphType || "website",
           image: resolvedImageWithDomain,
+          url: canonicalURL
+        },
+        image: {
+          alt: "Martin C Scott Homepage Screenshot",
+          width: 1200,
+          height: 630,
+          type: "image/jpeg"
         }
       }}
     />
