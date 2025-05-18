@@ -32,9 +32,19 @@ if (import.meta.env.SSR) {
     
     (async () => {
       try {
-        const { data } = await supabase.auth.session();
+        console.log('Starting session check...');
+        const { data, error } = await supabase.auth.session();
+        
+        if (error) {
+          console.error('Client-side session check error:', error);
+          document.getElementById('loading').textContent = 'Authentication error: ' + error.message;
+          return;
+        }
+        
         if (!data.session) {
+          console.log('No session found, redirecting to login...');
           window.location.href = '/auth/login';
+          return;
         }
         
         // Show user info
@@ -43,7 +53,13 @@ if (import.meta.env.SSR) {
         const logoutButton = document.getElementById('logout-button');
         const loading = document.getElementById('loading');
         
+        if (!userInfo || !userEmail || !logoutButton || !loading) {
+          console.error('DOM elements not found');
+          return;
+        }
+        
         if (data.session?.user?.email) {
+          console.log('User email:', data.session.user.email);
           userEmail.textContent = data.session.user.email;
           userInfo.classList.remove('hidden');
           loading.classList.add('hidden');
@@ -51,12 +67,13 @@ if (import.meta.env.SSR) {
         
         // Setup logout handler
         logoutButton.addEventListener('click', async () => {
+          console.log('Logout button clicked');
           await supabase.auth.signOut();
           window.location.href = '/auth/login';
         });
       } catch (error) {
-        console.error('Session check error:', error);
-        window.location.href = '/auth/login';
+        console.error('Unexpected error:', error);
+        document.getElementById('loading').textContent = 'Critical error: ' + error.message;
       }
     })();
   </script>
