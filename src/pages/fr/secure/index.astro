@@ -1,5 +1,7 @@
 ---
+import MainLayout from '@/layouts/MainLayout.astro';
 import { supabase } from '@/utils/supabase';
+import translations from '@/i18n/secure.json';
 
 // Server-side session check
 let session = null;
@@ -13,17 +15,18 @@ if (import.meta.env.SSR) {
 }
 ---
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Espace Sécurisé</title>
-</head>
-<body>
-  <h1>Bienvenue dans l'Espace Sécurisé</h1>
-  <p>Vous êtes connecté avec succès.</p>
-  
+<MainLayout title={translations.fr.secure.title}>
+  <div class="auth-container max-w-sm mx-auto p-8">
+    <h1 class="text-4xl lg:text-5xl font-bold text-heading dark:text-heading-dark">{translations.fr.secure.title}</h1>
+
+    <div id="user-info" class="hidden p-8 border border-gray-200 rounded-lg bg-white dark:bg-deep-purple dark:border-gray-700">
+      <p>{translations.fr.secure.welcome}, <span id="user-email" class="font-bold text-rose-flash dark:text-rose-flash"></span>!</p>
+      <button class="w-full mt-4 bg-rose-flash hover:bg-rose-flash-dark text-white py-2 px-4 rounded transition-colors duration-200" id="logout-button">{translations.fr.secure.logout}</button>
+    </div>
+
+    <div id="loading" class="text-center p-8">{translations.fr.secure.loading}</div>
+  </div>
+
   <script type="module">
     import { supabase } from '@/utils/supabase';
     
@@ -33,11 +36,28 @@ if (import.meta.env.SSR) {
         if (!data.session) {
           window.location.href = '/auth/login';
         }
+        
+        // Show user info
+        const userInfo = document.getElementById('user-info');
+        const userEmail = document.getElementById('user-email');
+        const logoutButton = document.getElementById('logout-button');
+        const loading = document.getElementById('loading');
+        
+        if (data.session?.user?.email) {
+          userEmail.textContent = data.session.user.email;
+          userInfo.classList.remove('hidden');
+          loading.classList.add('hidden');
+        }
+        
+        // Setup logout handler
+        logoutButton.addEventListener('click', async () => {
+          await supabase.auth.signOut();
+          window.location.href = '/auth/login';
+        });
       } catch (error) {
         console.error('Session check error:', error);
         window.location.href = '/auth/login';
       }
     })();
   </script>
-</body>
-</html>
+</MainLayout>
