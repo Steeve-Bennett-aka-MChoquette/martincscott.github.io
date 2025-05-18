@@ -91,9 +91,15 @@ export const title = "Connexion";
     
     // Handle GitHub login
     document.getElementById('github-login').addEventListener('click', async () => {
+      // Store current language before OAuth redirect
+      localStorage.setItem('auth_locale', 'fr');
+      
       try {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'github',
+          options: {
+            redirectTo: `${window.location.origin}/auth/callback/`
+          }
         });
         
         if (error) throw error;
@@ -104,9 +110,15 @@ export const title = "Connexion";
     
     // Handle Google login
     document.getElementById('google-login').addEventListener('click', async () => {
+      // Store current language before OAuth redirect
+      localStorage.setItem('auth_locale', 'fr');
+      
       try {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
+          options: {
+            redirectTo: `${window.location.origin}/auth/callback/`
+          }
         });
         
         if (error) throw error;
