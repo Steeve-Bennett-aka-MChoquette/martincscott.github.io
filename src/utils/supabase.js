@@ -1,45 +1,45 @@
 import { createClient } from '@supabase/supabase-js';
 
-/**
- * @typedef {Object} SupabaseAuthClientWithSession
- * @property {function(): Promise<{ data: { session: any }, error: any }>} session - Get current session
- */
+// Add fallbacks for environment variables to prevent build failures
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://placeholder-url.supabase.co';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
 
-/**
- * @type {import('@supabase/supabase-js').SupabaseClient & { auth: SupabaseAuthClientWithSession }}
- */
-const supabase = createClient(
-  import.meta.env.PUBLIC_SUPABASE_URL || 'https://placeholder-url.supabase.co',
-  import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key',
-  {
+// Create Supabase client with error handling
+let supabaseClient;
+
+// Check if we're in a server-side rendering environment
+if (import.meta.env.SSR) {
+  // During build/SSR, use a mock client to avoid errors
+  console.log('Using mock Supabase client for SSR/build');
+  supabaseClient = {
     auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true,
-      cookies: {
-        get: (key) => {
-          if (typeof document === "undefined") return null;
-          return document.cookie.replace(new RegExp(`(?:(?:^|.*;\\s*)${key}\\s*=\\s*([^;]*).*$)|^.*$`), '$1');
-        },
-        set: (key, value, options) => {
-          if (typeof document === "undefined") return;
-          document.cookie = `${key}=${value};path=/;domain=.martincscott.com;max-age=31536000;secure;samesite=strict`;
-        },
-        remove: (key, options) => {
-          if (typeof document === "undefined") return;
-          document.cookie = `${key}=;path=/;domain=.martincscott.com;max-age=0`;
-        }
-      }
+      signInWithPassword: async () => ({ data: null, error: null }),
+      signInWithOAuth: async () => ({ data: null, error: null }),
+      signOut: async () => ({ error: null }),
+      getUser: async () => ({ data: null, error: null }),
+      resetPasswordForEmail: async () => ({ data: null, error: null }),
+      signUp: async () => ({ data: null, error: null })
     }
+  };
+} else {
+  // In the browser, use the real Supabase client
+  try {
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+    console.log('Supabase client initialized successfully');
+  } catch (error) {
+    console.error('Error initializing Supabase client:', error);
+    // Provide a fallback that shows a clear error message
+    supabaseClient = {
+      auth: {
+        signInWithPassword: async () => ({ error: new Error('Supabase client failed to initialize. Please check your configuration.') }),
+        signInWithOAuth: async () => ({ error: new Error('Supabase client failed to initialize. Please check your configuration.') }),
+        signOut: async () => ({ error: new Error('Supabase client failed to initialize. Please check your configuration.') }),
+        getUser: async () => ({ data: null, error: new Error('Supabase client failed to initialize. Please check your configuration.') }),
+        resetPasswordForEmail: async () => ({ error: new Error('Supabase client failed to initialize. Please check your configuration.') }),
+        signUp: async () => ({ error: new Error('Supabase client failed to initialize. Please check your configuration.') })
+      }
+    };
   }
-);
+}
 
-// Add client-side only session method
-supabase.auth.session = () => {
-  return new Promise((resolve) => {
-    const session = supabase.auth.session();
-    resolve({ data: { session }, error: null });
-  });
-};
-
-export default supabase;
+export const supabase = supabaseClient;

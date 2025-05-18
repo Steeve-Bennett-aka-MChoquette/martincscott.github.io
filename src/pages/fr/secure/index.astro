@@ -1,80 +1,74 @@
 ---
-import MainLayout from '@/layouts/MainLayout.astro';
-import supabase from '@/utils/supabase';
-import translations from '@/i18n/secure.json';
+import MainLayout from "../../../layouts/MainLayout.astro";
+import Button from "../../../components/ui/button.astro";
+import { supabase } from "../../../utils/supabase";
+import secureTranslations from "../../../i18n/secure.json";
 
-// Server-side session check
-let session = null;
-if (import.meta.env.SSR) {
-  try {
-    const { data } = await supabase.auth.session();
-    session = data.session;
-  } catch (error) {
-    console.error('SSR session check error:', error);
-  }
-}
+// Set current locale
+const currentLocale = 'fr';
+
+// Load translations
+const translations = (secureTranslations[currentLocale] || secureTranslations.en).secure;
 ---
 
-<MainLayout title={translations.fr.secure.title}>
+<MainLayout title={translations.title}>
   <div class="auth-container max-w-sm mx-auto p-8">
-    <h1 class="text-4xl lg:text-5xl font-bold text-heading dark:text-heading-dark">{translations.fr.secure.title}</h1>
-
+    <h1 class="text-4xl lg:text-5xl font-bold text-heading dark:text-heading-dark">{translations.title}</h1>
+    
     <div id="user-info" class="hidden p-8 border border-gray-200 rounded-lg bg-white dark:bg-deep-purple dark:border-gray-700">
-      <p>{translations.fr.secure.welcome}, <span id="user-email" class="font-bold text-rose-flash dark:text-rose-flash"></span>!</p>
-      <button class="w-full mt-4 bg-rose-flash hover:bg-rose-flash-dark text-white py-2 px-4 rounded transition-colors duration-200" id="logout-button">{translations.fr.secure.logout}</button>
+      <p>{translations.welcome}, <span id="user-email" class="font-bold text-rose-flash dark:text-rose-flash"></span>!</p>
+      <button class="w-full mt-4 bg-rose-flash hover:bg-rose-flash-dark text-white py-2 px-4 rounded transition-colors duration-200" id="logout-button">{translations.logout}</button>
     </div>
-
-    <div id="loading" class="text-center p-8">{translations.fr.secure.loading}</div>
+    
+    <div id="loading" class="text-center p-8">{translations.loading}</div>
   </div>
 
-  <script type="module">
-    import supabase from '@/utils/supabase';
+  <script>
+    // This script runs in the browser
+    import { supabase } from '../../../utils/supabase';
+    import secureTranslations from '../../../i18n/secure.json';
     
-    (async () => {
+    // Get current locale from URL
+    const currentLocale = 'fr';
+    
+    // Load translations
+    const translations = (secureTranslations[currentLocale] || secureTranslations.en).secure;
+    
+    // Check authentication status
+    async function checkAuthStatus() {
       try {
-        console.log('Starting session check...');
-        const { data, error } = await supabase.auth.session();
+        const { data, error } = await supabase.auth.getUser();
         
-        if (error) {
-          console.error('Client-side session check error:', error);
-          document.getElementById('loading').textContent = 'Authentication error: ' + error.message;
-          return;
-        }
-        
-        if (!data.session) {
-          console.log('No session found, redirecting to login...');
-          window.location.href = '/auth/login';
+        if (error || !data?.user) {
+          // Redirect to login if not authenticated
+          window.location.href = `/${currentLocale}/auth/login`;
           return;
         }
         
         // Show user info
-        const userInfo = document.getElementById('user-info');
-        const userEmail = document.getElementById('user-email');
-        const logoutButton = document.getElementById('logout-button');
-        const loading = document.getElementById('loading');
+        document.getElementById('user-email').textContent = data.user.email;
+        document.getElementById('user-info').classList.remove('hidden');
+        document.getElementById('loading').classList.add('hidden');
         
-        if (!userInfo || !userEmail || !logoutButton || !loading) {
-          console.error('DOM elements not found');
-          return;
-        }
-        
-        if (data.session?.user?.email) {
-          console.log('User email:', data.session.user.email);
-          userEmail.textContent = data.session.user.email;
-          userInfo.classList.remove('hidden');
-          loading.classList.add('hidden');
-        }
-        
-        // Setup logout handler
-        logoutButton.addEventListener('click', async () => {
-          console.log('Logout button clicked');
-          await supabase.auth.signOut();
-          window.location.href = '/auth/login';
+        // Handle logout
+        document.getElementById('logout-button').addEventListener('click', async () => {
+          try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+            
+            // Redirect to login after logout
+            window.location.href = `/${currentLocale}/auth/login`;
+          } catch (error) {
+            alert(`${translations.logoutError}: ${error.message}`);
+          }
         });
       } catch (error) {
-        console.error('Unexpected error:', error);
-        document.getElementById('loading').textContent = 'Critical error: ' + error.message;
+        console.error('Auth check error:', error);
+        alert(`${translations.authError}: ${error.message}`);
       }
-    })();
+    }
+    
+    // Run auth check when page loads
+    checkAuthStatus();
   </script>
 </MainLayout>

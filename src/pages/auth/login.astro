@@ -87,7 +87,7 @@ export const title = 'Login';
 
   <script>
     // This script runs in the browser
-    import supabase from '../../utils/supabase';
+    import { supabase } from '../../utils/supabase';
     
     // Handle email/password login
     document.getElementById('login-form').addEventListener('submit', async (e) => {
