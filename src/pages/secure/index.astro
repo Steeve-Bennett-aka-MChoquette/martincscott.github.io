@@ -1,7 +1,7 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import Button from "../../components/ui/button.astro";
-import { supabase } from "../../utils/supabase";
+import supabase from "../../utils/supabase";
 import secureTranslations from "../../i18n/secure.json";
 
 // Set current locale
@@ -25,7 +25,7 @@ const translations = (secureTranslations[currentLocale] || secureTranslations.en
 
   <script>
     // This script runs in the browser
-    import { supabase } from '../../utils/supabase';
+    import supabase from '../../utils/supabase';
     import secureTranslations from '../../i18n/secure.json';
     
     // Get current locale from URL

@@ -1,6 +1,6 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
-import { supabase } from '@/utils/supabase';
+import supabase from '@/utils/supabase';
 import translations from '@/i18n/secure.json';
 
 // Server-side session check
@@ -28,7 +28,7 @@ if (import.meta.env.SSR) {
   </div>
 
   <script type="module">
-    import { supabase } from '@/utils/supabase';
+    import supabase from '@/utils/supabase';
     
     (async () => {
       try {
@@ -75,6 +75,6 @@ if (import.meta.env.SSR) {
         console.error('Unexpected error:', error);
         document.getElementById('loading').textContent = 'Critical error: ' + error.message;
       }
-    })();;
+    })();
   </script>
 </MainLayout>

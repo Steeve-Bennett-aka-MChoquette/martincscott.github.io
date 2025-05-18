@@ -42,4 +42,4 @@ supabase.auth.session = () => {
   });
 };
 
-export { supabase };
+export default supabase;
