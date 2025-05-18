@@ -175,9 +175,19 @@ function handleCloseOnClick() {
     
     (async () => {
       try {
-        const { data } = await supabase.auth.session();
+        console.log('Starting session check...');
+        const { data, error } = await supabase.auth.session();
+        
+        if (error) {
+          console.error('Client-side session check error:', error);
+          document.getElementById('loading').textContent = 'Authentication error: ' + error.message;
+          return;
+        }
+        
         if (!data.session) {
+          console.log('No session found, redirecting to login...');
           window.location.href = '/auth/login';
+          return;
         }
         
         // Show user info
@@ -186,7 +196,13 @@ function handleCloseOnClick() {
         const logoutButton = document.getElementById('logout-button');
         const loading = document.getElementById('loading');
         
+        if (!userInfo || !userEmail || !logoutButton || !loading) {
+          console.error('DOM elements not found');
+          return;
+        }
+        
         if (data.session?.user?.email) {
+          console.log('User email:', data.session.user.email);
           userEmail.textContent = data.session.user.email;
           userInfo.classList.remove('hidden');
           loading.classList.add('hidden');
@@ -194,14 +210,15 @@ function handleCloseOnClick() {
         
         // Setup logout handler
         logoutButton.addEventListener('click', async () => {
+          console.log('Logout button clicked');
           await supabase.auth.signOut();
           window.location.href = '/auth/login';
         });
       } catch (error) {
-        console.error('Session check error:', error);
-        window.location.href = '/auth/login';
+        console.error('Unexpected error:', error);
+        document.getElementById('loading').textContent = 'Critical error: ' + error.message;
       }
-    })();
+    })();;
   </script>  <footer class="my-20 pb-12 bg-transparent"> <p class="text-center text-sm text-slate-500">
 Copyright © 2025 Martin C-Scott. All rights reserved </p> <p class="text-center text-xs text-slate-800 mt-1">
 Made by
