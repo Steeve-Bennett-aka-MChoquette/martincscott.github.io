@@ -1,12 +1,5 @@
 ---
 import { supabase } from '@/utils/supabase';
-
-// Server-side session check
-const { data: { session } } = await supabase.auth.getSession();
-
-if (!session) {
-  return Response.redirect(new URL('/auth/login', request.url), 302);
-}
 ---
 
 <!DOCTYPE html>
@@ -20,11 +13,20 @@ if (!session) {
   <h1>Bienvenue dans l'Espace Sécurisé</h1>
   <p>Vous êtes connecté avec succès.</p>
   
-  <script>
-    // Client-side session check
+  <script type="module">
+    import { supabase } from '@/utils/supabase';
+    
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      try {
+        // Check session only in browser context
+        if (typeof document !== "undefined") {
+          const { data } = await supabase.auth.session();
+          if (!data.session) {
+            window.location.href = '/auth/login';
+          }
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
         window.location.href = '/auth/login';
       }
     })();
