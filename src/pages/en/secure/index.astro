@@ -1,81 +1,33 @@
 ---
-import MainLayout from "../../../layouts/MainLayout.astro";
-import Button from "../../../components/ui/button.astro";
-import { supabase } from "../../../utils/supabase";
-import secureTranslations from "../../../i18n/secure.json";
+import { supabase } from '@/utils/supabase';
 
-// Set current locale
-const currentLocale = 'en';
+// Server-side session check
+const { data: { session } } = await supabase.auth.getSession();
 
-// Load translations
-const translations = (secureTranslations[currentLocale] || secureTranslations.en).secure;
+if (!session) {
+  return Response.redirect(new URL('/auth/login', request.url), 302);
+}
 ---
 
-<MainLayout title={translations.title}>
-  <div class="auth-container max-w-sm mx-auto p-8">
-    <h1 class="text-4xl lg:text-5xl font-bold text-heading dark:text-heading-dark">{translations.title}</h1>
-    
-    <div id="user-info" class="hidden p-8 border border-gray-200 rounded-lg bg-white dark:bg-deep-purple dark:border-gray-700">
-      <p>{translations.welcome}, <span id="user-email" class="font-bold text-rose-flash dark:text-rose-flash"></span>!</p>
-      <button class="w-full mt-4 bg-rose-flash hover:bg-rose-flash-dark text-white py-2 px-4 rounded transition-colors duration-200" id="logout-button">{translations.logout}</button>
-    </div>
-    
-    <div id="loading" class="text-center p-8">{translations.loading}</div>
-  </div>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secure Area</title>
+</head>
+<body>
+  <h1>Welcome to the Secure Area (English)</h1>
+  <p>You are successfully authenticated.</p>
+  
   <script>
-    // This script runs in the browser
-    import { supabase } from '../../../utils/supabase';
-    import secureTranslations from '../../../i18n/secure.json';
-    
-    // Get current locale from URL
-    const currentLocale = 'en';
-    
-    // Load translations
-    const translations = (secureTranslations[currentLocale] || secureTranslations.en).secure;
-    
-    // Check authentication status
-    async function checkAuthStatus() {
-      try {
-        const { data, error } = await supabase.auth.getUser();
-        
-        if (error || !data?.user) {
-          // Redirect to login if not authenticated
-          window.location.href = `/${currentLocale}/auth/login`;
-          return;
-        }
-        
-        // Show user info
-        document.getElementById('user-email').textContent = data.user.email;
-        document.getElementById('user-info').classList.remove('hidden');
-        document.getElementById('loading').classList.add('hidden');
-        
-        // Handle logout
-        document.getElementById('logout-button').addEventListener('click', async () => {
-          try {
-            const { error } = await supabase.auth.signOut();
-            if (error) throw error;
-            
-            // Redirect to login after logout
-            window.location.href = `/${currentLocale}/auth/login`;
-          } catch (error) {
-            alert(`${translations.logoutError}: ${error.message}`);
-          }
-        });
-      } catch (error) {
-        console.error('Auth check error:', error);
-        alert(`${translations.authError}: ${error.message}`);
+    // Client-side session check
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = '/auth/login';
       }
-    }
-    
-    // Run auth check when page loads
-    checkAuthStatus();
+    })();
   </script>
-</MainLayout>
-
-<style>
-  /* Add this style to ensure the auth container is properly centered */
-  .auth-container {
-    min-height: 400px;
-  }
-</style>
+</body>
+</html>
