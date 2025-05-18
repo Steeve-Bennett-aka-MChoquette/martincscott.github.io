@@ -1,5 +1,20 @@
 ---
 import { supabase } from '@/utils/supabase';
+
+// Server-side session check
+let session = null;
+let ssrError = null;
+
+if (import.meta.env.SSR) {
+  try {
+    const { data, error } = await supabase.auth.session();
+    session = data?.session || null;
+    ssrError = error || null;
+  } catch (error) {
+    ssrError = error;
+    console.error('SSR session check error:', error);
+  }
+}
 ---
 
 <!DOCTYPE html>
@@ -26,7 +41,7 @@ import { supabase } from '@/utils/supabase';
           }
         }
       } catch (error) {
-        console.error('Session check error:', error);
+        console.error('Client session check error:', error);
         window.location.href = '/auth/login';
       }
     })();

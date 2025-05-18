@@ -1,5 +1,16 @@
 ---
 import { supabase } from '@/utils/supabase';
+
+// Server-side session check
+let session = null;
+if (import.meta.env.SSR) {
+  try {
+    const { data } = await supabase.auth.session();
+    session = data.session;
+  } catch (error) {
+    console.error('SSR session check error:', error);
+  }
+}
 ---
 
 <!DOCTYPE html>
@@ -18,15 +29,12 @@ import { supabase } from '@/utils/supabase';
     
     (async () => {
       try {
-        // Check session only in browser context
-        if (typeof document !== "undefined") {
-          const { data } = await supabase.auth.session();
-          if (!data.session) {
-            window.location.href = '/auth/login';
-          }
+        const { data } = await supabase.auth.session();
+        if (!data.session) {
+          window.location.href = '/auth/login';
         }
       } catch (error) {
-        console.error('Session check error:', error);
+        console.error('Client session check error:', error);
         window.location.href = '/auth/login';
       }
     })();
