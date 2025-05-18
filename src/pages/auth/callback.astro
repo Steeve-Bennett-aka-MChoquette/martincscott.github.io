@@ -2,9 +2,14 @@
 // src/pages/auth/callback.astro
 import { supabase } from "../../utils/supabase";
 
-// Get Supabase URL and anon key from environment variables
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+// Get Supabase URL and anon key from environment variables with fallbacks
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://nqdjdtmwydrpiswizvve.supabase.co';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xZGpkdG13eWRycGlzd2l6dnZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5MDI4NTUsImV4cCI6MjA2MTQ3ODg1NX0.GzTwcfBpBWhLwaKpRXNsyiUrKKLCq0hlx277ITAsIQc';
+
+// Log a warning if we're using fallbacks
+if (!import.meta.env.PUBLIC_SUPABASE_URL || !import.meta.env.PUBLIC_SUPABASE_ANON_KEY) {
+  console.warn('Using fallback Supabase configuration. Please set PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY environment variables.');
+}
 ---
 
 <!DOCTYPE html>
@@ -79,7 +84,7 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <p id="message">Processing your authentication...</p>
   </div>
 
-  <script>
+  <script define:vars={{ supabaseUrl, supabaseAnonKey }}>
     // Check if dark mode is enabled
     if (localStorage.getItem('appTheme') === 'dark' || 
         (!('appTheme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -125,14 +130,24 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     // Initialize Supabase client when the page loads
     document.addEventListener('DOMContentLoaded', async () => {
       try {
+        // Log the environment variables (without exposing the full key)
+        console.log('Supabase URL:', supabaseUrl);
+        console.log('Supabase Key available:', !!supabaseAnonKey);
+        
+        if (!supabaseUrl || !supabaseAnonKey) {
+          throw new Error('Supabase configuration is missing');
+        }
+        
         // Dynamically import the Supabase client
         const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+        console.log('Supabase client imported successfully');
         
-        // Initialize the client with environment variables that were injected during build
+        // Initialize the client with environment variables passed from the server
         const supabase = createClient(
-          '${supabaseUrl}',
-          '${supabaseAnonKey}'
+          supabaseUrl,
+          supabaseAnonKey
         );
+        console.log('Supabase client initialized successfully');
         
         // Make supabase available to the handleAuthCallback function
         window.supabaseClient = supabase;
@@ -141,8 +156,15 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         handleAuthCallback();
       } catch (error) {
         console.error('Failed to initialize Supabase client:', error);
-        document.getElementById('message').textContent = 
+        document.getElementById('message').textContent =
           'Failed to initialize authentication client. Please try again.';
+          
+        // Add more detailed error information to the console
+        if (error instanceof Error) {
+          console.error('Error name:', error.name);
+          console.error('Error message:', error.message);
+          console.error('Error stack:', error.stack);
+        }
       }
     });
   </script>
