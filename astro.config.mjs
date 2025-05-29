@@ -31,7 +31,8 @@ export default defineConfig({
       alias: {
         '@': '/src',
         '@components': '/src/components',
-        '@layouts': '/src/layouts'
+        '@layouts': '/src/layouts',
+        '@utils': '/src/utils'
       }
     },
     ssr: {
