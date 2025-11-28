@@ -23,10 +23,10 @@ if (!project) {
   return Astro.redirect(`/${currentLocale}/404`);
 }
 
-// Extract featured image URL from embedded data
-const featuredImageUrl = project._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+// Extract image URL from ACF field
+const featuredImageUrl = project.acf?.image;
 
-// Use featured image as fallback for Open Graph
+// Use ACF image for Open Graph
 const ogImageUrl = featuredImageUrl;
 
 // Format date
@@ -59,9 +59,9 @@ function formatDate(dateString: string) {
       
       {featuredImageUrl && (
         <div class="mb-14 rounded-lg overflow-hidden">
-          <img 
-            src={featuredImageUrl} 
-            alt={project._embedded?.['wp:featuredmedia']?.[0]?.alt_text || project.title.rendered}
+          <img
+            src={featuredImageUrl}
+            alt={project.title.rendered}
             class="w-full max-h-[600px] object-cover"
           />
         </div>

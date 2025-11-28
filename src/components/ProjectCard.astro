@@ -26,11 +26,11 @@ export function formatDate(dateString: string, locale: string) {
 ---
 
 <article class="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md transition hover:shadow-lg">
-  {project._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+  {project.acf?.image && (
     <div class="aspect-video overflow-hidden">
-      <img 
-        src={project._embedded?.['wp:featuredmedia']?.[0]?.source_url} 
-        alt={project._embedded?.['wp:featuredmedia']?.[0]?.alt_text || project.title?.rendered || "Project image"}
+      <img
+        src={project.acf.image}
+        alt={project.title?.rendered || "Project image"}
         class="w-full h-full object-cover"
       />
     </div>
