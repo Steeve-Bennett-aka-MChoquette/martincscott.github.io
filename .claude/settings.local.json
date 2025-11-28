@@ -7,7 +7,11 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nFix TypeScript error: add excerpt to WordPressProject interface\n\nThe build was failing because ProjectCard.astro uses project.excerpt\nbut the WordPressProject interface was missing this property.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(npm install:*)",
+      "Bash(npm audit:*)"
     ],
     "deny": [],
     "ask": []

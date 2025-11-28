@@ -1,13 +1,13 @@
 ---
 import Container from "@components/container.astro";
 import MainLayout from "../../layouts/MainLayout.astro";
-import { loadTranslations } from "../../utils/i18n";
+import { loadTranslations, type NotFoundTranslations } from "../../utils/i18n";
 
 // Set current locale
 const currentLocale = 'en';
 
 // Load translations
-const translations = await loadTranslations('notFound', currentLocale);
+const translations = await loadTranslations('notFound', currentLocale) as NotFoundTranslations;
 ---
 
 <MainLayout title={translations.title}>

@@ -1,6 +1,6 @@
 ---
 import Button from "../ui/button.astro";
-import { loadTranslations } from "../../utils/i18n";
+import { loadTranslations, type ContactTranslations } from "../../utils/i18n";
 
 // Define props
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 const { locale = 'fr' } = Astro.props;
 
 // Load translations
-const translations = await loadTranslations('contact', locale);
+const translations = await loadTranslations('contact', locale) as ContactTranslations;
 
 // Get environment variables in the component script
 const emailJsKey = import.meta.env.PUBLIC_EMAILJS_KEY;

@@ -7,12 +7,12 @@ import Hero from "@components/Hero.astro";
 import Logos from "@components/logos.astro";
 import Projects from "@components/Projects.astro";
 import Gradient from "@components/Gradient.astro";
-import { loadTranslations } from "../../utils/i18n";
+import { loadTranslations, type MainTranslations } from "../../utils/i18n";
 
 const currentLocale = 'fr';
 
 // Load translations
-const translations = await loadTranslations(null, currentLocale);
+const translations = await loadTranslations(null, currentLocale) as MainTranslations;
 ---
 <div class="relative overflow-x-hidden supports-[overflow-x:clip]:overflow-x-clip">
 <MainLayout title="Martin C Scott" description={translations.site.description}>

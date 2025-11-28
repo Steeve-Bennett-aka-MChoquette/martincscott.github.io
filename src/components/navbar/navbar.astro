@@ -11,13 +11,13 @@ interface Props {
 
 const { currentLocale = 'fr' } = Astro.props;
 
-import { loadTranslations } from "../../utils/i18n";
+import { loadTranslations, type MainTranslations, type AuthTranslations } from "../../utils/i18n";
 
 // Load translations for main namespace (navigation)
-const mainTranslations = await loadTranslations(null, currentLocale);
+const mainTranslations = await loadTranslations(null, currentLocale) as MainTranslations;
 
 // Load translations for auth namespace (login/signup)
-const authTranslations = await loadTranslations('auth', currentLocale);
+const authTranslations = await loadTranslations('auth', currentLocale) as AuthTranslations;
 
 const menuitems = [
   {

@@ -1,11 +1,11 @@
 ---
-import { getLocaleFromPath, loadTranslations } from "../utils/i18n";
+import { getLocaleFromPath, loadTranslations, type MainTranslations } from "../utils/i18n";
 
 // Get locale from URL or use default
 const currentLocale = getLocaleFromPath(Astro.url.pathname) || 'fr';
 
 // Load translations
-const translations = await loadTranslations(null, currentLocale);
+const translations = await loadTranslations(null, currentLocale) as MainTranslations;
 ---
 
 <footer class="my-20 pb-12 bg-transparent">

@@ -5,13 +5,13 @@ import Layout from "../../layouts/MainLayout.astro";
 import Container from "@components/container.astro";
 import Sectionhead from "@components/sectionhead.astro";
 
-import { loadTranslations } from "../../utils/i18n";
+import { loadTranslations, type AboutTranslations } from "../../utils/i18n";
 
 // Set current locale
 const currentLocale = 'en';
 
 // Load translations
-const translations = await loadTranslations('about', currentLocale);
+const translations = await loadTranslations('about', currentLocale) as AboutTranslations;
 
 // Define your skills/technologies
 const skills = [
