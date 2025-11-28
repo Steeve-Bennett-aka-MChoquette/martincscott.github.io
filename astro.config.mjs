@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import icon from "astro-icon";
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://static.martincscott.com',
@@ -18,11 +19,32 @@ export default defineConfig({
   },
   integrations: [
     tailwind(),
-    icon({ 
+    sitemap({
+      i18n: {
+        defaultLocale: 'fr',
+        locales: {
+          fr: 'fr-CA',
+          en: 'en-CA'
+        }
+      }
+    }),
+    icon({
       compiler: 'astro',
       include: {
-        // Include BoxIcons (bx) for contact page icons
-        bx: '*', // This will include all BoxIcons
+        // Include only the BoxIcons actually used in the project
+        bx: [
+          'bx-code',
+          'bx-desktop',
+          'bx-envelope',
+          'bxl-docker',
+          'bxl-flutter',
+          'bxl-github',
+          'bxl-google',
+          'bxl-linkedin',
+          'bxl-vuejs',
+          'bxl-wordpress',
+          'bxs-cloud-download'
+        ]
       }
     })
   ],

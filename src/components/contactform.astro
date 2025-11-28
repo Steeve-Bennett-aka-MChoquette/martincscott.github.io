@@ -174,7 +174,7 @@ if (import.meta.env.SSR && (!import.meta.env.PUBLIC_EMAILJS_KEY || !import.meta.
          // Continue anyway for build process
        } else if (!window.turnstileToken) {
          result.classList.add("text-red-500");
-         result.innerHTML = "Please complete the captcha";
+         result.textContent = "Please complete the captcha";
          return;
        }
 
@@ -184,7 +184,7 @@ if (import.meta.env.SSR && (!import.meta.env.PUBLIC_EMAILJS_KEY || !import.meta.
            el.style.display = "none";
          });
          
-         result.innerHTML = "Sending...";
+         result.textContent = "Sending...";
          result.setAttribute("aria-busy", "true");
 
          // Check if EmailJS is available
@@ -209,7 +209,7 @@ if (import.meta.env.SSR && (!import.meta.env.PUBLIC_EMAILJS_KEY || !import.meta.
          console.log('SUCCESS!', response.status, response.text);
          result.classList.remove("text-red-500");
          result.classList.add("text-green-500");
-         result.innerHTML = "Message sent successfully!";
+         result.textContent = "Message sent successfully!";
          
          // Reset form and captcha
          form.reset();
@@ -232,7 +232,7 @@ if (import.meta.env.SSR && (!import.meta.env.PUBLIC_EMAILJS_KEY || !import.meta.
        } catch(error) {
          console.error('FAILED...', error);
          result.classList.add("text-red-500");
-         result.innerHTML = "Failed to send: " + (error.text || error.message || 'Unknown error');
+         result.textContent = "Failed to send: " + (error.text || error.message || 'Unknown error');
          result.removeAttribute("aria-busy");
        }
      });

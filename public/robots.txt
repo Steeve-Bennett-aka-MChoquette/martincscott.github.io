@@ -1,0 +1,14 @@
+# robots.txt for static.martincscott.com
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://static.martincscott.com/sitemap-index.xml
+
+# Disallow auth pages from indexing
+Disallow: /auth/
+Disallow: /fr/auth/
+Disallow: /en/auth/
+Disallow: /secure/
+Disallow: /fr/secure/
+Disallow: /en/secure/
