@@ -15,8 +15,34 @@
     "subtitle": "Utilisation de technologies de pointe pour créer des produits numériques intuitifs pour les startups, les entreprises et les agences numériques du monde entier. Expert dans la transformation de défis complexes en solutions élégantes centrées sur l'utilisateur."
   },
   "features": {
-    "title": "Fonctionnalités",
-    "subtitle": "Tout ce dont vous avez besoin pour créer votre site web"
+    "title": "Expertise",
+    "subtitle": "Compétences et technologies que je maîtrise",
+    "items": [
+      {
+        "title": "Développement Logiciel",
+        "description": "Expérimenté en programmation fonctionnelle et orientée objet avec Dart, Python, Java, JavaScript et TypeScript. Focus sur l'architecture propre et les solutions évolutives."
+      },
+      {
+        "title": "Développement Frontend",
+        "description": "Expert React/NextJS avec plus de 5 ans d'expérience. Passionné par le design UI/UX et les standards web modernes avec HTML, CSS et les frameworks JavaScript."
+      },
+      {
+        "title": "Développement Flutter",
+        "description": "Compétent dans la création d'applications mobiles multiplateformes pour Android et iOS avec le framework Flutter, offrant des performances natives et un design responsive."
+      },
+      {
+        "title": "Expertise WordPress",
+        "description": "Développeur WordPress full-stack spécialisé dans les thèmes personnalisés, les plugins et les implémentations headless avec intégration REST API et GraphQL."
+      },
+      {
+        "title": "Développement Vue JS",
+        "description": "Maîtrise de Vue 3 avec architecture basée sur les composants, gestion d'état Vuex/Pinia et outils modernes comme Vite et Vue Router."
+      },
+      {
+        "title": "Docker & Open Source",
+        "description": "Expert en conteneurisation avec Docker et Kubernetes. Contributeur actif aux projets open source avec expérience en implémentation de pipelines CI/CD."
+      }
+    ]
   },
   "cta": {
     "title": "Construisons quelque chose ensemble",
@@ -30,6 +56,9 @@
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation"
   },
+  "logos": {
+    "title": "Technologies avec lesquelles je travaille"
+  },
   "blog": {
     "title": "Blog",
     "readMore": "Lire la suite",
@@ -38,8 +67,12 @@
   },
   "projects": {
     "title": "Projets",
+    "latestWork": "Nos dernières réalisations",
+    "latestWorkSubtitle": "Découvrez nos projets récents et les solutions innovantes que nous avons créées pour nos clients.",
     "viewProject": "Voir le projet",
-    "backToAll": "Retour à tous les projets"
+    "readMore": "En savoir plus",
+    "backToAll": "Retour à tous les projets",
+    "noProjects": "Aucun projet disponible pour le moment. Revenez plus tard."
   },
   "pagination": {
     "prev": "Précédent",

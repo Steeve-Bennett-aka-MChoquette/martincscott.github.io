@@ -15,8 +15,34 @@
     "subtitle": "Leveraging cutting-edge technologies to create intuitive digital products for startups, enterprises, and digital agencies worldwide. Expert in transforming complex challenges into elegant, user-centered solutions."
   },
   "features": {
-    "title": "Features",
-    "subtitle": "Everything you need to create your website"
+    "title": "Expertise",
+    "subtitle": "Skills and technologies I master",
+    "items": [
+      {
+        "title": "Software Development",
+        "description": "Experienced in both functional and OOP paradigms across Dart, Python, Java, JavaScript, and TypeScript. Focused on clean architecture and scalable solutions."
+      },
+      {
+        "title": "Frontend Development",
+        "description": "React/NextJS expert with 5+ years of experience. Passionate about UI/UX design and modern web standards using HTML, CSS, and JavaScript frameworks."
+      },
+      {
+        "title": "Flutter Development",
+        "description": "Skilled in building cross-platform mobile applications for Android and iOS using Flutter framework with native performance and responsive design."
+      },
+      {
+        "title": "WordPress Expertise",
+        "description": "Full-stack WordPress developer specializing in custom themes, plugins, and headless implementations with REST API and GraphQL integration."
+      },
+      {
+        "title": "Vue JS Development",
+        "description": "Proficient in Vue 3 with component-based architecture, Vuex/Pinia state management, and modern tooling like Vite and Vue Router."
+      },
+      {
+        "title": "Docker & Open Source",
+        "description": "Containerization expert with Docker and Kubernetes. Active contributor to open source projects with CI/CD pipeline implementation experience."
+      }
+    ]
   },
   "cta": {
     "title": "Let's build something together",
@@ -30,6 +56,9 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
   },
+  "logos": {
+    "title": "Technologies I work with"
+  },
   "blog": {
     "title": "Blog",
     "readMore": "Read more",
@@ -38,8 +67,12 @@
   },
   "projects": {
     "title": "Projects",
+    "latestWork": "Our latest Work",
+    "latestWorkSubtitle": "Discover our recent projects and the innovative solutions we've created for our clients.",
     "viewProject": "View project",
-    "backToAll": "Back to all projects"
+    "readMore": "Read more",
+    "backToAll": "Back to all projects",
+    "noProjects": "No projects available at the moment. Please check back later."
   },
   "pagination": {
     "prev": "Previous",

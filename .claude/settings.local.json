@@ -11,7 +11,8 @@
       "Bash(tree:*)",
       "Bash(find:*)",
       "Bash(npm install:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "WebFetch(domain:static.martincscott.com)"
     ],
     "deny": [],
     "ask": []

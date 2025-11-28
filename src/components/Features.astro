@@ -1,86 +1,52 @@
 ---
 // @ts-ignore
 import { Icon } from "astro-icon/components";
+import { loadTranslations, type MainTranslations } from "../utils/i18n";
 
 // Get current locale from URL
 const { pathname } = Astro.url;
 const currentPathSegments = pathname.split('/').filter(Boolean);
 const currentLocale = currentPathSegments[0] || 'fr';
 
-// Import translations
-let translations;
-try {
-  const translationModule = await import(`../i18n/${currentLocale}.json`);
-  translations = translationModule.default;
-} catch (error) {
-  console.error(`Failed to load translations for ${currentLocale}`, error);
-  // Fallback to default locale
-  const fallbackModule = await import(`../i18n/fr.json`);
-  translations = fallbackModule.default;
-}
+// Load translations
+const translations = await loadTranslations(null, currentLocale) as MainTranslations;
 
-const features = [
-  {
-    title: "Software Development",
-    description:
-      "Experienced in both functional and OOP paradigms across Dart, Python, Java, JavaScript, and TypeScript. Focused on clean architecture and scalable solutions.",
-    icon: "bx:bx-code",
-  },
-  {
-    title: "Frontend Development",
-    description:
-      "React/NextJS expert with 5+ years of experience. Passionionate about UI/UX design and modern web standards using HTML, CSS, and JavaScript frameworks.",
-    icon: "bx:bx-desktop",
-  },
-  {
-    title: "Flutter Development",
-    description:
-      "Skilled in building cross-platform mobile applications for Android and iOS using Flutter framework with native performance and responsive design.",
-    icon: "bx:bxl-flutter",
-  },
-  {
-    title: "WordPress Expertise",
-    description:
-      "Full-stack WordPress developer specializing in custom themes, plugins, and headless implementations with REST API and GraphQL integration.",
-    icon: "bx:bxl-wordpress",
-  },
-  {
-    title: "Vue JS Development",
-    description:
-      "Proficient in Vue 3 with component-based architecture, Vuex/Pinia state management, and modern tooling like Vite and Vue Router.",
-    icon: "bx:bxl-vuejs",
-  },
-  {
-    title: "Docker & Open Source",
-    description:
-      "Containerization expert with Docker and Kubernetes. Active contributor to open source projects with CI/CD pipeline implementation experience.",
-    icon: "bx:bxl-docker",
-  },
+// Icons for each feature (order matches translation items)
+const featureIcons = [
+  "bx:bx-code",
+  "bx:bx-desktop",
+  "bx:bxl-flutter",
+  "bx:bxl-wordpress",
+  "bx:bxl-vuejs",
+  "bx:bxl-docker",
 ];
+
+// Get feature items from translations
+const featureItems = (translations.features as { items?: { title: string; description: string }[] })?.items || [];
 ---
 
 <div class="mt-16 md:mt-0">
   <h2 class="text-center text-4xl lg:text-5xl font-bold lg:tracking-tight">
-    {translations.features?.title || "Features"}
+    {(translations.features as { title?: string })?.title || "Features"}
   </h2>
   <p class="text-center text-lg mt-4 text-slate-600 dark:text-slate-300">
-    {translations.features?.subtitle || "Everything you need to create your website"}
+    {(translations.features as { subtitle?: string })?.subtitle || "Everything you need to create your website"}
   </p>
 </div>
 
 <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-16 gap-12">
   {
-    features.map((item) => (
+    featureItems.map((item, index) => (
       <div class="gradient-border">
-<div class="flex flex-col feature-card bg-white dark:bg-deep-purple shadow-md rounded-lg p-6 dark-transition">
+        <div class="flex flex-col feature-card bg-white dark:bg-deep-purple shadow-md rounded-lg p-6 dark-transition">
           <!-- Header section with icon and title in a 1:2 grid -->
           <div class="grid grid-cols-3 md:grid-cols-1 gap-4 items-center mb-4">
             <div class="flex justify-center items-center bg-rose-flash dark:bg-custom-purple rounded-full p-2 w-16 h-16 shrink-0">
-              <Icon class="text-white dark:text-slate-300 text-4xl self-center" name={item.icon} />
+              <Icon class="text-white dark:text-slate-300 text-4xl self-center" name={featureIcons[index] || "bx:bx-code"} />
             </div>
             <h3 class="font-semibold text-lg col-span-2">{item.title}</h3>
           </div>
-          
+
           <!-- Paragraph in its own section -->
           <p class="text-slate-950 dark:text-paragraph-dark mt-2 leading-relaxed">{item.description}</p>
         </div>

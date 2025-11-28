@@ -1,24 +1,34 @@
 ---
 import { getAllProjects } from "../lib/wordpress";
+import { loadTranslations, type MainTranslations } from "../utils/i18n";
+
+// Get current locale from URL
+const { pathname } = Astro.url;
+const currentPathSegments = pathname.split('/').filter(Boolean);
+const currentLocale = currentPathSegments[0] || 'fr';
+
+// Load translations
+const translations = await loadTranslations(null, currentLocale) as MainTranslations;
 
 // Fetch projects from WordPress API with error handling
 let projects = [];
 try {
-  projects = await getAllProjects(1, 3); // Fetch first 3 projects
+  projects = await getAllProjects(1, 3, currentLocale); // Fetch first 3 projects
 } catch (error) {
   console.error("Error fetching projects");
 }
 
-// Format date similar to BlogCard component
+// Format date based on locale
 function formatDate(dateString: string) {
   try {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    const locale = currentLocale === 'fr' ? 'fr-FR' : 'en-US';
+    return new Date(dateString).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
   } catch (error) {
-    return "No date available";
+    return currentLocale === 'fr' ? "Date non disponible" : "No date available";
   }
 }
 
@@ -48,18 +58,17 @@ function getContentSnippet(project) {
 
 <div class="mt-16 md:mt-0">
   <h2 class="text-center text-4xl lg:text-5xl font-bold lg:tracking-tight">
-    Our latest Work
+    {(translations.projects as { latestWork?: string })?.latestWork || "Our latest Work"}
   </h2>
-  <p class="text-center text-lg mt-4 text-slate-600">
-    Astro comes batteries included. It takes the best parts of state-of-the-art
-    tools and adds its own innovations.
+  <p class="text-center text-lg mt-4 text-slate-600 dark:text-slate-300">
+    {(translations.projects as { latestWorkSubtitle?: string })?.latestWorkSubtitle || "Discover our recent projects and the innovative solutions we've created for our clients."}
   </p>
 </div>
 
 <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-16 gap-12">
   {projects.length === 0 ? (
     <div class="col-span-3 text-center py-12">
-      <p>No projects available at the moment. Please check back later.</p>
+      <p>{(translations.projects as { noProjects?: string })?.noProjects || "No projects available at the moment. Please check back later."}</p>
     </div>
   ) : (
     projects.map((project) => (
@@ -93,8 +102,8 @@ function getContentSnippet(project) {
           </div>
           
           <!-- Read more link -->
-          <a href={project?.slug ? `/projects/${project.slug}` : "#"} class="text-rose-flash hover:underline inline-flex items-center">
-            Read more
+          <a href={project?.slug ? `/${currentLocale}/projects/${project.slug}` : "#"} class="text-rose-flash hover:underline inline-flex items-center">
+            {(translations.projects as { readMore?: string })?.readMore || "Read more"}
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
