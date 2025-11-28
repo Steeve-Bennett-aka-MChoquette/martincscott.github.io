@@ -1,14 +1,9 @@
 ---
 import MainLayout from "../../../layouts/MainLayout.astro";
-import ProjectCard from "../../../components/ProjectCard.astro";
 import { getProjectBySlug, getAllProjects } from "../../../lib/wordpress";
 import { loadTranslations } from "../../../utils/i18n";
 
-// Set current locale
 const currentLocale = 'fr';
-
-// Load translations
-const mainTranslations = await loadTranslations(null, currentLocale);
 const projectTranslations = await loadTranslations('projects', currentLocale);
 
 export async function getStaticPaths() {

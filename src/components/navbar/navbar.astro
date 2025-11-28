@@ -60,7 +60,7 @@ const menuitems = [
           <MenuItems aria-label="Main menu">
             <ul class="flex items-center gap-6">
               {
-                menuitems.map((item, index) => (
+                menuitems.map((item) => (
                   <li>
                     <a 
                       href={item.path} 
@@ -117,10 +117,10 @@ const menuitems = [
   <div class="mt-4">
     <ul class="flex flex-col gap-4">
       {
-        menuitems.map((item, index) => (
+        menuitems.map((item) => (
           <li>
-            <a 
-              href={item.path} 
+            <a
+              href={item.path}
               target={item.target}
               class="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900 uppercase"
             >

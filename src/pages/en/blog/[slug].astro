@@ -3,11 +3,7 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 import { getPostBySlug, getAllPosts, extractFeaturedImageUrl } from "../../../lib/wordpress";
 import { loadTranslations } from "../../../utils/i18n";
 
-// Set current locale
 const currentLocale = 'en';
-
-// Load translations
-const mainTranslations = await loadTranslations(null, currentLocale);
 const blogTranslations = await loadTranslations('blog', currentLocale);
 
 export async function getStaticPaths() {

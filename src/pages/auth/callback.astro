@@ -1,7 +1,5 @@
 ---
 // src/pages/auth/callback.astro
-import { supabase } from "../../utils/supabase";
-
 // Get Supabase URL and anon key from environment variables with fallbacks
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://nqdjdtmwydrpiswizvve.supabase.co';
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xZGpkdG13eWRycGlzd2l6dnZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5MDI4NTUsImV4cCI6MjA2MTQ3ODg1NX0.GzTwcfBpBWhLwaKpRXNsyiUrKKLCq0hlx277ITAsIQc';

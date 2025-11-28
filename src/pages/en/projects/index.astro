@@ -6,8 +6,6 @@ import ProjectCard from "../../../components/ProjectCard.astro";
 
 const PER_PAGE = 9;
 const page = 1;
-
-// Get current locale from URL
 const locale = "en";
 
 // Import translations
@@ -23,42 +21,6 @@ try {
   totalPages = await getTotalProjectPages(PER_PAGE, locale);
 } catch (error) {
   console.error("Error fetching projects or total pages");
-}
-
-// Format date similar to BlogCard component
-function formatDate(dateString: string) {
-  try {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  } catch (error) {
-    return "No date available";
-  }
-}
-
-// Helper function to safely get content snippet
-function getContentSnippet(project) {
-  // Simple approach - directly access ACF content field
-  if (project?.acf?.content) {
-    try {
-      return project.acf.content.substring(0, 150) + '...';
-    } catch (error) {
-      // Silent error handling for production
-    }
-  }
-  
-  // Fallback to WordPress excerpt or content if ACF content is not available
-  if (project?.excerpt?.rendered) {
-    return project.excerpt.rendered.substring(0, 150) + '...';
-  }
-  
-  if (project?.content?.rendered) {
-    return project.content.rendered.substring(0, 150) + '...';
-  }
-  
-  return "No content available";
 }
 ---
 <div class="relative overflow-x-hidden supports-[overflow-x:clip]:overflow-x-clip">
