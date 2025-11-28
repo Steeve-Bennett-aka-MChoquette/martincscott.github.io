@@ -62,6 +62,9 @@ export interface WordPressProject {
   title: {
     rendered: string;
   };
+  excerpt?: {
+    rendered: string;
+  };
   acf: {
     content: string;
     image: string;
