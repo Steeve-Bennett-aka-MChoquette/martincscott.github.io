@@ -1,0 +1,347 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import { Icon } from "astro-icon/components";
+import secureTranslations from "../../../i18n/secure.json";
+
+const currentLocale = 'en';
+
+// Load translations
+const t = (secureTranslations[currentLocale] || secureTranslations.en).profile;
+const secureT = (secureTranslations[currentLocale] || secureTranslations.en).secure;
+---
+
+<MainLayout title={t.title}>
+  <div class="profile-container">
+    <div class="profile-header">
+      <a href={`/${currentLocale}/secure`} class="back-link">
+        <Icon name="bx:bx-arrow-back" class="w-5 h-5" />
+        {t.backToDashboard}
+      </a>
+      <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{t.title}</h1>
+    </div>
+
+    <div id="loading" class="text-center p-8">{secureT.loading}</div>
+
+    <div id="profile-content" class="hidden">
+      <!-- Avatar Section -->
+      <div class="avatar-section">
+        <div class="avatar-wrapper">
+          <img id="avatar-img" src="/images/default-avatar.png" alt="Avatar" class="avatar-image" />
+          <button id="change-avatar" class="change-avatar-btn" title={t.changeAvatar}>
+            <Icon name="bx:bx-camera" class="w-5 h-5" />
+          </button>
+        </div>
+        <input type="file" id="avatar-input" accept="image/*" class="hidden" />
+      </div>
+
+      <!-- Account Info Section -->
+      <div class="info-section">
+        <h2 class="section-title">{t.accountInfo}</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">{t.email}</span>
+            <span id="user-email" class="info-value"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{t.provider}</span>
+            <span id="user-provider" class="info-value"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{t.createdAt}</span>
+            <span id="user-created" class="info-value"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{t.lastSignIn}</span>
+            <span id="user-last-signin" class="info-value"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editable Profile Section -->
+      <form id="profile-form" class="profile-form">
+        <h2 class="section-title">{t.personalInfo}</h2>
+
+        <div class="form-group">
+          <label for="display-name">{t.displayName}</label>
+          <input type="text" id="display-name" name="display_name"
+            class="form-input" placeholder="John Doe" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="first-name">{t.firstName}</label>
+            <input type="text" id="first-name" name="first_name"
+              class="form-input" placeholder="John" />
+          </div>
+          <div class="form-group">
+            <label for="last-name">{t.lastName}</label>
+            <input type="text" id="last-name" name="last_name"
+              class="form-input" placeholder="Doe" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio">{t.bio}</label>
+          <textarea id="bio" name="bio" rows="3"
+            class="form-input" placeholder="Tell us about yourself..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="save-btn" class="save-btn">
+            <span id="save-text">{t.save}</span>
+            <span id="saving-text" class="hidden">{t.saving}</span>
+          </button>
+        </div>
+
+        <p id="save-message" class="save-message hidden"></p>
+      </form>
+
+      <!-- Logout Section -->
+      <div class="logout-section">
+        <button id="logout-button" class="logout-btn">
+          <Icon name="bx:bx-log-out" class="w-5 h-5 mr-2" />
+          {secureT.logout}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabase } from '../../../utils/supabase';
+    import secureTranslations from '../../../i18n/secure.json';
+
+    const currentLocale = 'en';
+    const t = (secureTranslations[currentLocale] || secureTranslations.en).profile;
+    const secureT = (secureTranslations[currentLocale] || secureTranslations.en).secure;
+
+    let currentUser = null;
+
+    async function initProfile() {
+      try {
+        const { data, error } = await supabase.auth.getUser();
+
+        if (error || !data?.user) {
+          window.location.href = `/${currentLocale}/auth/login`;
+          return;
+        }
+
+        currentUser = data.user;
+        displayUserInfo(currentUser);
+        await loadProfile();
+
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('profile-content').classList.remove('hidden');
+      } catch (error) {
+        console.error('Profile init error:', error);
+        alert(`${secureT.authError}: ${error.message}`);
+      }
+    }
+
+    function displayUserInfo(user: any) {
+      document.getElementById('user-email')!.textContent = user.email || '-';
+
+      // Determine provider
+      const provider = user.app_metadata?.provider || 'email';
+      const providerDisplay = provider.charAt(0).toUpperCase() + provider.slice(1);
+      document.getElementById('user-provider')!.textContent = providerDisplay;
+
+      // Format dates
+      const createdAt = new Date(user.created_at);
+      document.getElementById('user-created')!.textContent = createdAt.toLocaleDateString(currentLocale);
+
+      const lastSignIn = user.last_sign_in_at ? new Date(user.last_sign_in_at) : null;
+      document.getElementById('user-last-signin')!.textContent = lastSignIn
+        ? lastSignIn.toLocaleDateString(currentLocale) + ' ' + lastSignIn.toLocaleTimeString(currentLocale)
+        : '-';
+
+      // Set avatar from user metadata or default
+      const avatarUrl = user.user_metadata?.avatar_url || '/images/default-avatar.png';
+      (document.getElementById('avatar-img') as HTMLImageElement).src = avatarUrl;
+    }
+
+    async function loadProfile() {
+      // Load profile data from user_metadata
+      const metadata = currentUser.user_metadata || {};
+
+      (document.getElementById('display-name') as HTMLInputElement).value = metadata.display_name || metadata.full_name || '';
+      (document.getElementById('first-name') as HTMLInputElement).value = metadata.first_name || '';
+      (document.getElementById('last-name') as HTMLInputElement).value = metadata.last_name || '';
+      (document.getElementById('bio') as HTMLTextAreaElement).value = metadata.bio || '';
+    }
+
+    // Handle form submission
+    document.getElementById('profile-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+      const saveText = document.getElementById('save-text')!;
+      const savingText = document.getElementById('saving-text')!;
+      const saveMessage = document.getElementById('save-message')!;
+
+      saveBtn.disabled = true;
+      saveText.classList.add('hidden');
+      savingText.classList.remove('hidden');
+      saveMessage.classList.add('hidden');
+
+      try {
+        const { error } = await (supabase.auth as any).updateUser({
+          data: {
+            display_name: (document.getElementById('display-name') as HTMLInputElement).value,
+            first_name: (document.getElementById('first-name') as HTMLInputElement).value,
+            last_name: (document.getElementById('last-name') as HTMLInputElement).value,
+            bio: (document.getElementById('bio') as HTMLTextAreaElement).value
+          }
+        });
+
+        if (error) throw error;
+
+        saveMessage.textContent = t.saved;
+        saveMessage.classList.remove('hidden', 'error');
+        saveMessage.classList.add('success');
+      } catch (error: any) {
+        saveMessage.textContent = `${t.saveError}: ${error.message}`;
+        saveMessage.classList.remove('hidden', 'success');
+        saveMessage.classList.add('error');
+      } finally {
+        saveBtn.disabled = false;
+        saveText.classList.remove('hidden');
+        savingText.classList.add('hidden');
+      }
+    });
+
+    // Handle avatar change
+    document.getElementById('change-avatar')!.addEventListener('click', () => {
+      document.getElementById('avatar-input')!.click();
+    });
+
+    document.getElementById('avatar-input')!.addEventListener('change', async (e) => {
+      const input = e.target as HTMLInputElement;
+      const file = input.files?.[0];
+      if (!file) return;
+
+      // For now, just show preview - storage upload can be added later
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = document.getElementById('avatar-img') as HTMLImageElement;
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Handle logout
+    document.getElementById('logout-button')!.addEventListener('click', async () => {
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        window.location.href = `/${currentLocale}/auth/login`;
+      } catch (error: any) {
+        alert(`${secureT.logoutError}: ${error.message}`);
+      }
+    });
+
+    // Initialize
+    initProfile();
+  </script>
+
+  <style>
+    .profile-container {
+      @apply mt-20 max-w-2xl mx-auto p-6;
+    }
+
+    .profile-header {
+      @apply mb-6;
+    }
+
+    .back-link {
+      @apply flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-rose-flash dark:hover:text-rose-flash mb-4 transition-colors;
+    }
+
+    .avatar-section {
+      @apply flex justify-center mb-8;
+    }
+
+    .avatar-wrapper {
+      @apply relative;
+    }
+
+    .avatar-image {
+      @apply w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg;
+    }
+
+    .change-avatar-btn {
+      @apply absolute bottom-0 right-0 bg-rose-flash hover:bg-rose-flash/80 text-white p-2 rounded-full shadow-md transition-colors;
+    }
+
+    .info-section, .profile-form {
+      @apply bg-white dark:bg-deep-purple border-2 border-gray-200 dark:border-rose-flash rounded-lg p-6 mb-6;
+    }
+
+    .section-title {
+      @apply text-lg font-semibold text-gray-800 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700;
+    }
+
+    .info-grid {
+      @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+    }
+
+    .info-item {
+      @apply flex flex-col;
+    }
+
+    .info-label {
+      @apply text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide;
+    }
+
+    .info-value {
+      @apply text-gray-800 dark:text-white font-medium;
+    }
+
+    .form-group {
+      @apply mb-4;
+    }
+
+    .form-row {
+      @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+    }
+
+    .form-group label {
+      @apply block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300;
+    }
+
+    .form-input {
+      @apply w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-rose-flash focus:border-rose-flash dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+    }
+
+    textarea.form-input {
+      @apply resize-none;
+    }
+
+    .form-actions {
+      @apply mt-6;
+    }
+
+    .save-btn {
+      @apply w-full rounded text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-200 dark:ring-gray-800 px-5 py-2.5 bg-rose-flash text-white hover:bg-rose-flash/80 disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .save-message {
+      @apply mt-4 text-center text-sm p-2 rounded;
+    }
+
+    .save-message.success {
+      @apply bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300;
+    }
+
+    .save-message.error {
+      @apply bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300;
+    }
+
+    .logout-section {
+      @apply text-center;
+    }
+
+    .logout-btn {
+      @apply inline-flex items-center justify-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors;
+    }
+  </style>
+</MainLayout>

@@ -17,6 +17,7 @@ interface MockAuth {
   getUser: () => Promise<MockAuthResult>;
   resetPasswordForEmail: () => Promise<MockAuthResult>;
   signUp: () => Promise<MockAuthResult>;
+  updateUser: () => Promise<MockAuthResult>;
 }
 
 interface MockSupabaseClient {
@@ -39,7 +40,8 @@ if (import.meta.env.SSR) {
       signOut: async () => ({ error: null }),
       getUser: async () => ({ data: null, error: null }),
       resetPasswordForEmail: async () => ({ data: null, error: null }),
-      signUp: async () => ({ data: null, error: null })
+      signUp: async () => ({ data: null, error: null }),
+      updateUser: async () => ({ data: null, error: null })
     }
   };
 } else {
@@ -58,7 +60,8 @@ if (import.meta.env.SSR) {
         signOut: async () => ({ error: initError }),
         getUser: async () => ({ data: null, error: initError }),
         resetPasswordForEmail: async () => ({ data: null, error: initError }),
-        signUp: async () => ({ data: null, error: initError })
+        signUp: async () => ({ data: null, error: initError }),
+        updateUser: async () => ({ data: null, error: initError })
       }
     };
   }

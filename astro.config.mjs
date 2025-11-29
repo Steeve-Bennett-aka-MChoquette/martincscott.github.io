@@ -33,9 +33,13 @@ export default defineConfig({
       include: {
         // Include only the BoxIcons actually used in the project
         bx: [
+          'bx-arrow-back',
+          'bx-camera',
           'bx-code',
           'bx-desktop',
           'bx-envelope',
+          'bx-log-out',
+          'bx-user',
           'bxl-docker',
           'bxl-flutter',
           'bxl-github',
