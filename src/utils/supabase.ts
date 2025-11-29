@@ -20,8 +20,18 @@ interface MockAuth {
   updateUser: () => Promise<MockAuthResult>;
 }
 
+interface MockStorageBucket {
+  upload: () => Promise<MockAuthResult>;
+  getPublicUrl: () => { data: { publicUrl: string } };
+}
+
+interface MockStorage {
+  from: () => MockStorageBucket;
+}
+
 interface MockSupabaseClient {
   auth: MockAuth;
+  storage: MockStorage;
 }
 
 type SupabaseClientType = SupabaseClient | MockSupabaseClient;
@@ -42,6 +52,12 @@ if (import.meta.env.SSR) {
       resetPasswordForEmail: async () => ({ data: null, error: null }),
       signUp: async () => ({ data: null, error: null }),
       updateUser: async () => ({ data: null, error: null })
+    },
+    storage: {
+      from: () => ({
+        upload: async () => ({ data: null, error: null }),
+        getPublicUrl: () => ({ data: { publicUrl: '' } })
+      })
     }
   };
 } else {
@@ -62,6 +78,12 @@ if (import.meta.env.SSR) {
         resetPasswordForEmail: async () => ({ data: null, error: initError }),
         signUp: async () => ({ data: null, error: initError }),
         updateUser: async () => ({ data: null, error: initError })
+      },
+      storage: {
+        from: () => ({
+          upload: async () => ({ data: null, error: initError }),
+          getPublicUrl: () => ({ data: { publicUrl: '' } })
+        })
       }
     };
   }
