@@ -12,7 +12,7 @@
 
   // Initialize Lenis smooth scroll
   const lenis = new Lenis({
-    duration: 1.2,
+    duration: 1.6,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     orientation: 'vertical',
     gestureOrientation: 'vertical',
@@ -35,109 +35,115 @@
 
   // Scroll animations for elements with data-animate attribute
   function initScrollAnimations() {
-    // Fade up animations
+    // Fade up animations - aggressive with rotation
     gsap.utils.toArray('[data-animate="fade-up"]').forEach((el: any) => {
       gsap.fromTo(el,
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 120, rotateX: 10 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
+          rotateX: 0,
+          duration: 0.5,
+          ease: 'power4.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 85%',
+            start: 'top 90%',
             toggleActions: 'play none none reverse'
           }
         }
       );
     });
 
-    // Fade in animations
+    // Fade in animations - with scale punch
     gsap.utils.toArray('[data-animate="fade-in"]').forEach((el: any) => {
       gsap.fromTo(el,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-    });
-
-    // Slide left animations
-    gsap.utils.toArray('[data-animate="slide-left"]').forEach((el: any) => {
-      gsap.fromTo(el,
-        { opacity: 0, x: 100 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-    });
-
-    // Slide right animations
-    gsap.utils.toArray('[data-animate="slide-right"]').forEach((el: any) => {
-      gsap.fromTo(el,
-        { opacity: 0, x: -100 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-    });
-
-    // Scale up animations
-    gsap.utils.toArray('[data-animate="scale-up"]').forEach((el: any) => {
-      gsap.fromTo(el,
-        { opacity: 0, scale: 0.8 },
+        { opacity: 0, scale: 0.9 },
         {
           opacity: 1,
           scale: 1,
-          duration: 0.8,
-          ease: 'power2.out',
+          duration: 0.4,
+          ease: 'back.out(1.7)',
           scrollTrigger: {
             trigger: el,
-            start: 'top 85%',
+            start: 'top 90%',
             toggleActions: 'play none none reverse'
           }
         }
       );
     });
 
-    // Stagger children animations
+    // Slide left animations - dramatic entrance
+    gsap.utils.toArray('[data-animate="slide-left"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0, x: 150, rotate: 3 },
+        {
+          opacity: 1,
+          x: 0,
+          rotate: 0,
+          duration: 0.5,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Slide right animations - dramatic entrance
+    gsap.utils.toArray('[data-animate="slide-right"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0, x: -150, rotate: -3 },
+        {
+          opacity: 1,
+          x: 0,
+          rotate: 0,
+          duration: 0.5,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Scale up animations - explosive with bounce
+    gsap.utils.toArray('[data-animate="scale-up"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0, scale: 0.5, rotate: -5 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotate: 0,
+          duration: 0.6,
+          ease: 'back.out(2)',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Stagger children animations - fast cascade
     gsap.utils.toArray('[data-animate="stagger"]').forEach((container: any) => {
       const children = container.children;
       gsap.fromTo(children,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 80, scale: 0.9 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out',
+          scale: 1,
+          duration: 0.4,
+          stagger: 0.08,
+          ease: 'power4.out',
           scrollTrigger: {
             trigger: container,
-            start: 'top 85%',
+            start: 'top 90%',
             toggleActions: 'play none none reverse'
           }
         }
