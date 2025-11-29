@@ -151,11 +151,82 @@
     });
   }
 
+  // Entrance animations for above-the-fold content (no scroll trigger)
+  function initEntranceAnimations() {
+    // Hero entrance - staggered reveal
+    const heroElements = document.querySelectorAll('[data-entrance="hero"]');
+    if (heroElements.length) {
+      gsap.fromTo(heroElements,
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power4.out',
+          delay: 0.3
+        }
+      );
+    }
+
+    // Hero image entrance - scale and rotate in
+    const heroImage = document.querySelectorAll('[data-entrance="hero-image"]');
+    if (heroImage.length) {
+      gsap.fromTo(heroImage,
+        { opacity: 0, scale: 0.6, rotate: -10 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotate: 0,
+          duration: 1,
+          ease: 'back.out(1.5)',
+          delay: 0.2
+        }
+      );
+    }
+
+    // Navbar entrance - slide down
+    const navbar = document.querySelectorAll('[data-entrance="navbar"]');
+    if (navbar.length) {
+      gsap.fromTo(navbar,
+        { opacity: 0, y: -30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+          delay: 0.1
+        }
+      );
+    }
+
+    // Generic fade entrance
+    const fadeEntrance = document.querySelectorAll('[data-entrance="fade"]');
+    if (fadeEntrance.length) {
+      gsap.fromTo(fadeEntrance,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power2.out',
+          delay: 0.4
+        }
+      );
+    }
+  }
+
   // Initialize animations after DOM is ready
-  document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  document.addEventListener('DOMContentLoaded', () => {
+    initEntranceAnimations();
+    initScrollAnimations();
+  });
 
   // Re-initialize on page navigation (for View Transitions)
-  document.addEventListener('astro:page-load', initScrollAnimations);
+  document.addEventListener('astro:page-load', () => {
+    initEntranceAnimations();
+    initScrollAnimations();
+  });
 </script>
 
 <style is:global>
