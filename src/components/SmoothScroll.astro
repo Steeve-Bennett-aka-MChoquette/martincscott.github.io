@@ -250,6 +250,30 @@
 </script>
 
 <style is:global>
+  /* Hide animated elements initially to prevent FOUC */
+  [data-entrance="hero"],
+  [data-entrance="hero-image"],
+  [data-entrance="navbar"],
+  [data-entrance="fade"] {
+    opacity: 0;
+  }
+
+  [data-entrance="circle-reveal"] {
+    clip-path: circle(0% at 50% 50%);
+  }
+
+  [data-animate="fade-up"],
+  [data-animate="fade-in"],
+  [data-animate="slide-left"],
+  [data-animate="slide-right"],
+  [data-animate="scale-up"] {
+    opacity: 0;
+  }
+
+  [data-animate="stagger"] > * {
+    opacity: 0;
+  }
+
   /* Lenis smooth scroll styles */
   html.lenis, html.lenis body {
     height: auto;
