@@ -253,6 +253,12 @@ const secureT = (secureTranslations[currentLocale] || secureTranslations.en).sec
 
         if (updateError) throw updateError;
 
+        // Refresh the session to get updated user metadata
+        await supabase.auth.refreshSession();
+
+        // Update the image src with the actual URL (not just preview)
+        (document.getElementById('avatar-img') as HTMLImageElement).src = avatarUrl;
+
         console.log('Avatar uploaded successfully:', avatarUrl);
       } catch (error: any) {
         console.error('Avatar upload error:', error);

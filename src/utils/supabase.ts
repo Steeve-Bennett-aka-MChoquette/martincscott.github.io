@@ -18,6 +18,7 @@ interface MockAuth {
   resetPasswordForEmail: () => Promise<MockAuthResult>;
   signUp: () => Promise<MockAuthResult>;
   updateUser: () => Promise<MockAuthResult>;
+  refreshSession: () => Promise<MockAuthResult>;
 }
 
 interface MockStorageBucket {
@@ -51,7 +52,8 @@ if (import.meta.env.SSR) {
       getUser: async () => ({ data: null, error: null }),
       resetPasswordForEmail: async () => ({ data: null, error: null }),
       signUp: async () => ({ data: null, error: null }),
-      updateUser: async () => ({ data: null, error: null })
+      updateUser: async () => ({ data: null, error: null }),
+      refreshSession: async () => ({ data: null, error: null })
     },
     storage: {
       from: () => ({
@@ -77,7 +79,8 @@ if (import.meta.env.SSR) {
         getUser: async () => ({ data: null, error: initError }),
         resetPasswordForEmail: async () => ({ data: null, error: initError }),
         signUp: async () => ({ data: null, error: initError }),
-        updateUser: async () => ({ data: null, error: initError })
+        updateUser: async () => ({ data: null, error: initError }),
+        refreshSession: async () => ({ data: null, error: initError })
       },
       storage: {
         from: () => ({
