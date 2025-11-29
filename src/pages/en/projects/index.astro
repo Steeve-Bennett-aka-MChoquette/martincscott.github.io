@@ -46,7 +46,7 @@ try {
           <p class="mt-4">{translations.checkBackLater}</p>
         </div>
       ) : (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-animate="stagger">
           {projects.map((project) => (
             <ProjectCard project={project} locale={locale} />
           ))}

@@ -35,7 +35,7 @@ const translations = translationModule.default;
           <p class="mt-4">Veuillez revenir plus tard pour du nouveau contenu.</p>
         </div>
       ) : (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-animate="stagger">
           {posts.map((post) => (
             <BlogCard post={post} locale={currentLocale} />
           ))}

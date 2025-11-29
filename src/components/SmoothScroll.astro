@@ -214,6 +214,26 @@
         }
       );
     }
+
+    // Circle reveal for featured images
+    const circleRevealElements = document.querySelectorAll('[data-entrance="circle-reveal"]');
+    if (circleRevealElements.length) {
+      circleRevealElements.forEach((el: any) => {
+        // Set initial clip-path
+        gsap.set(el, {
+          clipPath: 'circle(0% at 50% 50%)',
+          opacity: 1
+        });
+
+        // Animate the circle reveal
+        gsap.to(el, {
+          clipPath: 'circle(150% at 50% 50%)',
+          duration: 1.2,
+          ease: 'power4.out',
+          delay: 0.4
+        });
+      });
+    }
   }
 
   // Initialize animations after DOM is ready
