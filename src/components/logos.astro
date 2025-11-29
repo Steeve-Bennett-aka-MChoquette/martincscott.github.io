@@ -13,8 +13,8 @@ const translations = await loadTranslations(null, currentLocale) as MainTranslat
 ---
 
 <div class="mt-24 mb-24">
-  <h2 class="text-center text-slate-500 dark:text-slate-400">{(translations.logos as { title?: string })?.title || "Technologies I work with"}</h2>
-  <div class="flex gap-8 md:gap-20 items-center justify-center mt-10 flex-wrap md">
+  <h2 class="text-center text-slate-500 dark:text-slate-400" data-animate="fade-up">{(translations.logos as { title?: string })?.title || "Technologies I work with"}</h2>
+  <div class="flex gap-8 md:gap-20 items-center justify-center mt-10 flex-wrap md" data-animate="stagger">
 
     <Icon class="size-8 md:size-12 dark:text-slate-100"name="simple-icons:react" />
     <Icon class="size-8 md:size-12 dark:text-slate-100" name="simple-icons:vuedotjs" />
