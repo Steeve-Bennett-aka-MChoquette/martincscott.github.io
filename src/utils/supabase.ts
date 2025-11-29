@@ -24,6 +24,7 @@ interface MockAuth {
 interface MockStorageBucket {
   upload: () => Promise<MockAuthResult>;
   getPublicUrl: () => { data: { publicUrl: string } };
+  list: () => Promise<{ data: any[] | null; error: Error | null }>;
 }
 
 interface MockStorage {
@@ -58,7 +59,8 @@ if (import.meta.env.SSR) {
     storage: {
       from: () => ({
         upload: async () => ({ data: null, error: null }),
-        getPublicUrl: () => ({ data: { publicUrl: '' } })
+        getPublicUrl: () => ({ data: { publicUrl: '' } }),
+        list: async () => ({ data: [], error: null })
       })
     }
   };
@@ -85,7 +87,8 @@ if (import.meta.env.SSR) {
       storage: {
         from: () => ({
           upload: async () => ({ data: null, error: initError }),
-          getPublicUrl: () => ({ data: { publicUrl: '' } })
+          getPublicUrl: () => ({ data: { publicUrl: '' } }),
+          list: async () => ({ data: [], error: initError })
         })
       }
     };
