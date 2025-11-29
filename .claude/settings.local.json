@@ -13,7 +13,10 @@
       "Bash(npm install:*)",
       "Bash(npm audit:*)",
       "WebFetch(domain:static.martincscott.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(cat:*)",
+      "Bash(git config:*)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []

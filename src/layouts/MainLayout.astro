@@ -3,6 +3,8 @@
 import { SEO } from "astro-seo";
 import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
+import SmoothScroll from "@components/SmoothScroll.astro";
+import PageTransition from "@components/PageTransition.astro";
 import "@fontsource-variable/inter/index.css";
 
 import { getLocaleFromPath, loadTranslations, type MainTranslations } from "../utils/i18n";
@@ -84,6 +86,8 @@ const makeTitle = title
     </style>
   </head>
 <body class="bg-slate-100 dark:bg-deep-purple">
+    <PageTransition />
+    <SmoothScroll />
     <div class="bg-transparent">
       <div class="bg-transparent"></div>
       <Navbar currentLocale={currentLocale} />

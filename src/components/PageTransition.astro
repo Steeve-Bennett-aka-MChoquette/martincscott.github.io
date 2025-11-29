@@ -1,0 +1,90 @@
+---
+// Page transition overlay component
+---
+
+<div id="page-transition" class="page-transition">
+  <div class="transition-overlay"></div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const overlay = document.querySelector('.transition-overlay');
+
+  // Page enter animation (when page loads)
+  function pageEnter() {
+    gsap.fromTo(overlay,
+      { scaleY: 1 },
+      {
+        scaleY: 0,
+        duration: 0.6,
+        ease: 'power3.inOut',
+        transformOrigin: 'top'
+      }
+    );
+  }
+
+  // Page leave animation (before navigating away)
+  function pageLeave() {
+    return gsap.fromTo(overlay,
+      { scaleY: 0 },
+      {
+        scaleY: 1,
+        duration: 0.4,
+        ease: 'power3.inOut',
+        transformOrigin: 'bottom'
+      }
+    );
+  }
+
+  // Initial page load animation
+  document.addEventListener('DOMContentLoaded', () => {
+    pageEnter();
+  });
+
+  // Handle link clicks for page transitions
+  document.addEventListener('click', async (e) => {
+    const target = e.target as HTMLElement;
+    const link = target.closest('a');
+
+    if (link && link.href && !link.href.startsWith('#') && !link.target && link.origin === window.location.origin) {
+      // Skip if it's the same page
+      if (link.href === window.location.href) return;
+
+      // Skip if modifier keys are pressed
+      if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+
+      e.preventDefault();
+
+      // Animate out
+      await pageLeave();
+
+      // Navigate
+      window.location.href = link.href;
+    }
+  });
+
+  // Handle browser back/forward
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      pageEnter();
+    }
+  });
+</script>
+
+<style>
+  .page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .transition-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+</style>

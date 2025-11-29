@@ -1,0 +1,176 @@
+---
+// Lenis smooth scroll + GSAP ScrollTrigger integration
+---
+
+<script>
+  import Lenis from 'lenis';
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  // Register GSAP plugins
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Initialize Lenis smooth scroll
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: 'vertical',
+    gestureOrientation: 'vertical',
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 2,
+  });
+
+  // Connect Lenis to GSAP ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+
+  gsap.ticker.lagSmoothing(0);
+
+  // Make lenis available globally for other scripts
+  (window as any).lenis = lenis;
+
+  // Scroll animations for elements with data-animate attribute
+  function initScrollAnimations() {
+    // Fade up animations
+    gsap.utils.toArray('[data-animate="fade-up"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Fade in animations
+    gsap.utils.toArray('[data-animate="fade-in"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Slide left animations
+    gsap.utils.toArray('[data-animate="slide-left"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0, x: 100 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Slide right animations
+    gsap.utils.toArray('[data-animate="slide-right"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0, x: -100 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Scale up animations
+    gsap.utils.toArray('[data-animate="scale-up"]').forEach((el: any) => {
+      gsap.fromTo(el,
+        { opacity: 0, scale: 0.8 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Stagger children animations
+    gsap.utils.toArray('[data-animate="stagger"]').forEach((container: any) => {
+      const children = container.children;
+      gsap.fromTo(children,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: container,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+  }
+
+  // Initialize animations after DOM is ready
+  document.addEventListener('DOMContentLoaded', initScrollAnimations);
+
+  // Re-initialize on page navigation (for View Transitions)
+  document.addEventListener('astro:page-load', initScrollAnimations);
+</script>
+
+<style is:global>
+  /* Lenis smooth scroll styles */
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+</style>
