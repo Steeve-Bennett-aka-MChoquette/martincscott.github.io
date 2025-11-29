@@ -41,7 +41,7 @@ const skills = [
     </Sectionhead>
 
     <div class="flex flex-col md:flex-row gap-10 mx-auto max-w-4xl mt-16">
-      <div class="flex-1">
+      <div class="flex-1" data-entrance="hero-image">
         <div class="w-full max-w-md">
           {profileImage && (
             <Picture
@@ -55,21 +55,21 @@ const skills = [
           )}
         </div>
       </div>
-      
+
       <div class="flex-1 flex flex-col items-center justify-center">
-        <h2 class="font-bold text-3xl text-gray-800 dark:text-gray-100">
+        <h2 class="font-bold text-3xl text-gray-800 dark:text-gray-100" data-entrance="hero">
           Bonjour, je suis Martin Choquette-Scott
         </h2>
-        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3">
+        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3" data-entrance="hero">
           En tant que spécialiste UX/UI et innovateur numérique, j'aide les startups et les entreprises à créer des produits numériques exceptionnels. Avec une formation en sciences politiques et en e-business, je combine expertise technique et réflexion stratégique pour fournir des solutions qui transforment les entreprises.
         </p>
-        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3">
+        <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400 mt-3" data-entrance="hero">
           Je travaille avec des entreprises, des agences et des startups pour développer des stratégies numériques, mettre en œuvre des technologies de pointe et servir de conseiller de confiance dans le domaine de la fintech. Mon approche se concentre sur la conception centrée sur l'utilisateur et des résultats commerciaux mesurables.
         </p>
       </div>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12">
+    <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12" data-animate="stagger">
       {skills.map((skill) => (
         <div class="group p-5 rounded-lg shadow-xl dark:bg-semi-deep-purple border border-rose-flash transition hover:shadow-lg">
           <div class="text-4xl mb-4">{skill.icon}</div>
@@ -83,7 +83,7 @@ const skills = [
       ))}
     </div>
 
-    <div class="mx-auto max-w-4xl mt-16 text-center">
+    <div class="mx-auto max-w-4xl mt-16 text-center" data-animate="fade-up">
         <h2 class="font-bold text-3xl text-gray-800 dark:text-gray-100 mb-8">
           Prêt à transformer votre vision numérique en réalité ?
         </h2>
