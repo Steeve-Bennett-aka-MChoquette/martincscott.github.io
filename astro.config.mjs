@@ -31,7 +31,7 @@ export default defineConfig({
     icon({
       compiler: 'astro',
       include: {
-        // Include only the BoxIcons actually used in the project
+        // -Include only the BoxIcons actually used in the project
         bx: [
           'bx-arrow-back',
           'bx-camera',
